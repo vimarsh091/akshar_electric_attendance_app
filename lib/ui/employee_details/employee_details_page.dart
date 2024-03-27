@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
+import 'package:popup_menu/popup_menu.dart';
 import 'package:test_project/app/app_color.dart';
 import 'package:test_project/gen/assets.gen.dart';
 import 'package:test_project/ui/employee_details/employee_details_controller.dart';
 import 'package:test_project/ui/widgets/common_app_bar.dart';
 import 'package:test_project/ui/widgets/common_app_image.dart';
+import 'package:test_project/utils/utils.dart';
 
 class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
   const EmployeeDetailsPage({super.key});
@@ -17,11 +19,16 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
       appBar: PreferredSize(
         preferredSize: Size(Get.width, 36.h),
         child: CommonAppBar(
-            showLeading: true,
-            onLeadingTap: () {
-              Get.back();
-            },
-            title: 'Employee profile'),
+          showLeading: true,
+          onLeadingTap: () {
+            Get.back();
+          },
+          title: 'Employee profile',
+          onSufixTap: () {
+            listMenu();
+          },
+          showSufixIcon: true,
+        ),
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -32,12 +39,15 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
             mainAxisSize: MainAxisSize.max,
             children: [
               26.verticalSpace,
-              CommonAppImage(
-                path: Assets.images.aksharLogo.path,
-                height: 120.w,
-                width: 120.w,
-                fit: BoxFit.contain,
-                radius: 50,
+              GestureDetector(
+                onTap: () => listMenu(),
+                child: CommonAppImage(
+                  path: Assets.images.icAvatar.path,
+                  height: 120.w,
+                  width: 120.w,
+                  fit: BoxFit.contain,
+                  radius: 100,
+                ),
               ),
               12.verticalSpace,
               GestureDetector(
@@ -135,60 +145,122 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
   }
 
   Future showEditDetailsSheet() {
-    return Get.bottomSheet(Column(
-      children: [
-        12.verticalSpace,
-        Text(
-          'Edit details',
-          style: TextStyle(
-              color: AppColors.colorAppTheme,
-              fontSize: 24,
-              fontWeight: FontWeight.bold),
-        ),
-        20.verticalSpace,
-        TextField(
-          controller: controller.punchInController,
-          decoration: InputDecoration(
-              hintText: 'Enter punch in time',
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: AppColors.colorAppTheme))),
-        ),
-        20.verticalSpace,
-        TextField(
-          controller: controller.punchOutController,
-          decoration: InputDecoration(
-              hintText: 'Enter punch out time',
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: AppColors.colorAppTheme))),
-        ),
-        20.verticalSpace,
-        TextField(
-          controller: controller.siteNameController,
-          decoration: InputDecoration(
-              hintText: 'Enter site name',
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: AppColors.colorAppTheme))),
-        ),
-        80.verticalSpace,
-        GestureDetector(
-          onTap: () => Get.back(),
-          child: Container(
-            width: Get.width,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: AppColors.colorAppTheme),
-            child: const Text(
-              textAlign: TextAlign.center,
-              'Update',
-              style: TextStyle(color: Colors.white, fontSize: 14),
-            ),
+    return Get.bottomSheet(
+        enableDrag: true,
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(22),
+            side: BorderSide(color: AppColors.colorAppTheme, width: 2)),
+        isDismissible: true,
+        isScrollControlled: true,
+        backgroundColor: Colors.white,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              12.verticalSpace,
+              Text(
+                'Edit Details',
+                style: TextStyle(
+                    color: AppColors.colorAppTheme,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold),
+              ),
+              20.verticalSpace,
+              TextField(
+                controller: controller.punchInController,
+                decoration: InputDecoration(
+                    hintText: 'Enter punch in time',
+                    labelText: 'Enter punch in time',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide:
+                            BorderSide(color: AppColors.colorAppTheme))),
+              ),
+              20.verticalSpace,
+              TextField(
+                controller: controller.punchOutController,
+                decoration: InputDecoration(
+                    hintText: 'Enter punch out time',
+                    labelText: 'Enter punch out time',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide:
+                            BorderSide(color: AppColors.colorAppTheme))),
+              ),
+              20.verticalSpace,
+              TextField(
+                controller: controller.siteNameController,
+                decoration: InputDecoration(
+                    hintText: 'Enter site name',
+                    labelText: 'Enter site name',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide:
+                            BorderSide(color: AppColors.colorAppTheme))),
+              ),
+              40.verticalSpace,
+              GestureDetector(
+                onTap: () {
+                  if (controller.punchInController.text.trim().isEmpty) {
+                    Utils.showMessage('Error', 'Please enter punch in time');
+                  } else if (controller.punchOutController.text
+                      .trim()
+                      .isEmpty) {
+                    Utils.showMessage('Error', 'Please enter punch out time');
+                  } else if (controller.siteNameController.text
+                      .trim()
+                      .isEmpty) {
+                    Utils.showMessage('Error', 'Please enter site name');
+                  } else {
+                    Get.back();
+                  }
+                },
+                child: Container(
+                  width: Get.width,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: AppColors.colorAppTheme),
+                  child: const Text(
+                    textAlign: TextAlign.center,
+                    'Update',
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
+                ),
+              ),
+              20.verticalSpace
+            ],
           ),
-        )
-      ],
-    ));
+        ));
+  }
+
+  void listMenu() {
+    PopupMenu menu = PopupMenu(
+        context: Get.context!,
+        config: MenuConfig.forList(),
+        items: [
+          // MenuItem.forList(
+          //     title: 'Copy', image: Image.asset('assets/copy.png')),
+          MenuItem.forList(
+              title: 'Home',
+              image: Icon(Icons.home, color: Color(0xFF181818), size: 20)),
+          MenuItem.forList(
+              title: 'Mail',
+              image: Icon(Icons.mail, color: Color(0xFF181818), size: 20)),
+          MenuItem.forList(
+              title: 'Power',
+              image: Icon(Icons.power, color: Color(0xFF181818), size: 20)),
+          MenuItem.forList(
+              title: 'Setting',
+              image: Icon(Icons.settings, color: Color(0xFF181818), size: 20)),
+          MenuItem.forList(
+              title: 'PopupMenu',
+              image: Icon(Icons.menu, color: Color(0xFF181818), size: 20))
+        ],
+        onClickMenu: controller.onClickMenu,
+        onShow: controller.onShow,
+        onDismiss: controller.onDismiss);
   }
 }

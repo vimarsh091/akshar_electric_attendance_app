@@ -4,7 +4,9 @@ import 'package:test_project/app/app_color.dart';
 
 class CommonAppBar extends StatelessWidget {
   final bool? showLeading;
+  final bool? showSufixIcon;
   final VoidCallback onLeadingTap;
+  final VoidCallback? onSufixTap;
   final String title;
   final IconData? leadingIcon;
 
@@ -13,7 +15,9 @@ class CommonAppBar extends StatelessWidget {
       this.showLeading,
       required this.onLeadingTap,
       required this.title,
-      this.leadingIcon});
+      this.leadingIcon,
+      this.showSufixIcon = false,
+      this.onSufixTap});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +33,7 @@ class CommonAppBar extends StatelessWidget {
                   child: Positioned(
                     left: 0,
                     child: Padding(
-                      padding:  EdgeInsets.only(left:20.w),
+                      padding: EdgeInsets.only(left: 20.w),
                       child: Icon(
                         leadingIcon ?? Icons.arrow_back,
                         color: AppColors.colorAppTheme,
@@ -43,6 +47,20 @@ class CommonAppBar extends StatelessWidget {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
+              if (showSufixIcon == true)
+                Positioned(
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: () => onSufixTap?.call(),
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 20.w),
+                      child: const Icon(
+                        Icons.settings_accessibility,
+                        color: AppColors.colorAppTheme,
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
           8.verticalSpace,

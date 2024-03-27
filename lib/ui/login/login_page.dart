@@ -10,6 +10,8 @@ import 'package:test_project/utils/utils.dart';
 import '../../gen/assets.gen.dart';
 
 class LoginPage extends GetView<LoginController> {
+  const LoginPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +36,7 @@ class LoginPage extends GetView<LoginController> {
                         controller: controller.usernameController,
                         decoration: InputDecoration(
                             hintText: 'Enter username',
+                            labelText: 'Enter username',
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
@@ -44,6 +47,7 @@ class LoginPage extends GetView<LoginController> {
                         controller: controller.passwordController,
                         decoration: InputDecoration(
                             hintText: 'Enter password',
+                            labelText: 'Enter password',
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
