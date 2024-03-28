@@ -1,0 +1,1 @@
+ /home/vimarsh/flutter_projects/akshar_electric_attendance_app/.dart_tool/flutter_build/0a00205258853766be802691fc9da5e1/native_assets.yaml: 
