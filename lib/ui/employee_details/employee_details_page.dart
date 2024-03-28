@@ -23,9 +23,43 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
           onLeadingTap: () {
             Get.back();
           },
+          popupKey: controller.popUpKey,
           title: 'Employee profile',
           onSufixTap: () {
-            listMenu();
+            PopupMenu(
+                    context: context,
+                    config: MenuConfig.forList(
+                      backgroundColor: AppColors.colorAppTheme,
+                      arrowHeight: 16,
+                      itemWidth: 120.w,
+                      lineColor: Colors.red
+                    ),
+                    items: [
+                      MenuItem.forList(
+                          textStyle: TextStyle(fontSize: 12,color: Colors.white),
+                          title: 'Edit Profile',
+                          image: Icon(Icons.mode_edit_rounded,
+                              color: Colors.white, size: 20)),
+                      MenuItem.forList(
+                          textStyle: TextStyle(fontSize: 12,color: Colors.white),
+                          title: 'Call Now',
+                          image: Icon(Icons.call_rounded,
+                              color: Colors.white, size: 20)),
+                      MenuItem.forList(
+                          textStyle: TextStyle(fontSize: 12,color: Colors.white),
+                          title: 'Share Password',
+                          image: Icon(Icons.password_rounded,
+                              color: Colors.white, size: 20)),
+                      MenuItem.forList(
+                          textStyle: TextStyle(color: Colors.red, fontSize: 12),
+                          title: 'Delete Profile',
+                          image: Icon(Icons.delete_rounded,
+                              color: Colors.red, size: 20)),
+                    ],
+                    onClickMenu: controller.onClickMenu,
+                    onShow: controller.onShow,
+                    onDismiss: controller.onDismiss)
+                .show(widgetKey: controller.popUpKey);
           },
           showSufixIcon: true,
         ),
@@ -39,15 +73,12 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
             mainAxisSize: MainAxisSize.max,
             children: [
               26.verticalSpace,
-              GestureDetector(
-                onTap: () => listMenu(),
-                child: CommonAppImage(
-                  path: Assets.images.icAvatar.path,
-                  height: 120.w,
-                  width: 120.w,
-                  fit: BoxFit.contain,
-                  radius: 100,
-                ),
+              CommonAppImage(
+                path: Assets.images.icAvatar.path,
+                height: 120.w,
+                width: 120.w,
+                fit: BoxFit.contain,
+                radius: 100,
               ),
               12.verticalSpace,
               GestureDetector(
@@ -234,33 +265,5 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
             ],
           ),
         ));
-  }
-
-  void listMenu() {
-    PopupMenu menu = PopupMenu(
-        context: Get.context!,
-        config: MenuConfig.forList(),
-        items: [
-          // MenuItem.forList(
-          //     title: 'Copy', image: Image.asset('assets/copy.png')),
-          MenuItem.forList(
-              title: 'Home',
-              image: Icon(Icons.home, color: Color(0xFF181818), size: 20)),
-          MenuItem.forList(
-              title: 'Mail',
-              image: Icon(Icons.mail, color: Color(0xFF181818), size: 20)),
-          MenuItem.forList(
-              title: 'Power',
-              image: Icon(Icons.power, color: Color(0xFF181818), size: 20)),
-          MenuItem.forList(
-              title: 'Setting',
-              image: Icon(Icons.settings, color: Color(0xFF181818), size: 20)),
-          MenuItem.forList(
-              title: 'PopupMenu',
-              image: Icon(Icons.menu, color: Color(0xFF181818), size: 20))
-        ],
-        onClickMenu: controller.onClickMenu,
-        onShow: controller.onShow,
-        onDismiss: controller.onDismiss);
   }
 }

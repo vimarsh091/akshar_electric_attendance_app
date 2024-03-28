@@ -9,6 +9,7 @@ class CommonAppBar extends StatelessWidget {
   final VoidCallback? onSufixTap;
   final String title;
   final IconData? leadingIcon;
+  final GlobalKey? popupKey;
 
   const CommonAppBar(
       {super.key,
@@ -17,7 +18,8 @@ class CommonAppBar extends StatelessWidget {
       required this.title,
       this.leadingIcon,
       this.showSufixIcon = false,
-      this.onSufixTap});
+      this.onSufixTap,
+      this.popupKey});
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +30,10 @@ class CommonAppBar extends StatelessWidget {
           Stack(
             children: [
               if (showLeading == true)
-                GestureDetector(
-                  onTap: () => onLeadingTap.call(),
-                  child: Positioned(
-                    left: 0,
+                Positioned(
+                  left: 0,
+                  child: GestureDetector(
+                    onTap: () => onLeadingTap.call(),
                     child: Padding(
                       padding: EdgeInsets.only(left: 20.w),
                       child: Icon(
@@ -51,6 +53,7 @@ class CommonAppBar extends StatelessWidget {
                 Positioned(
                   right: 0,
                   child: GestureDetector(
+                    key: popupKey,
                     onTap: () => onSufixTap?.call(),
                     child: Padding(
                       padding: EdgeInsets.only(right: 20.w),

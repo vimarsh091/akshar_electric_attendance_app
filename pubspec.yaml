@@ -46,6 +46,8 @@ dependencies:
   intl: ^0.19.0
   flutter_slidable: ^3.1.0
   popup_menu: ^2.0.0
+  either_dart: ^1.0.0
+  connectivity_plus: ^2.3.0
 
 
 dev_dependencies:
