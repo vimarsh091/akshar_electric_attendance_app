@@ -1,4 +1,5 @@
 import 'package:get_storage/get_storage.dart';
+import 'package:test_project/data/network/models/LoginResponse.dart';
 
 class StorageManager {
   final box = GetStorage();
@@ -8,7 +9,7 @@ class StorageManager {
 
   static const authToken = 'auth_token';
 
-  void setLoggedInUser(String user) {
+  void setLoggedInUser(LoginResponse user) {
     box.write(StorageManager.user, user);
   }
 
@@ -27,5 +28,8 @@ class StorageManager {
 
   String? getAuthToken() {
     return box.read(StorageManager.authToken);
+  }
+  void setAuthToken(String token) {
+     box.write(StorageManager.authToken,token);
   }
 }

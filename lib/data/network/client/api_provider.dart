@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:either_dart/either.dart';
@@ -21,12 +22,16 @@ abstract class IApiProvider {
     String? headerLangCode,
   });
 
+  Future<Either<String, dynamic>?> putMethod<T>(
+    String url, {
+    String? headerLangCode,
+  });
+
   Future<Either<String, dynamic>?> postMethod<T>(
     String url,
     dynamic body, {
     Progress? uploadProgress,
     Map<String, File>? files,
-    String? headerLangCode,
   });
 
   Future<Either<String, dynamic>?> deleteMethod<T>(
@@ -69,23 +74,12 @@ class ApiProvider extends GetConnect implements IApiProvider {
             'Authorization': 'Bearer $token',
           }
         });
-        debugPrint('${result.body}');
-        var commonResponse = CommonResponse<T>.fromJson(result.body)
-          ..responseCode = result.statusCode;
-        if (commonResponse.isTokenExpired) {
-          /// Show token expired popup
-          Utils.showPopupDialog(LocaleKeys.error.tr, commonResponse.message!,
-              textConfirm: LocaleKeys.signIn.tr,
-              isDismissible: false,
-              onWillPop: () => Future.value(false),
-              onConfirm: () {
-                Get.back();
-                Get.offAllNamed(AppRoutes.loginPage);
-              },
-              confirmTextColor: Colors.white);
-          return null;
-        } else if (commonResponse.isSuccess) {
-          return Right(commonResponse.data ?? commonResponse.message);
+        // Print response body and status code
+        debugPrint('Responsebody :- ${result.body}');
+        var commonResponse = CommonResponse<T>.fromJson(result.body);
+
+        if (commonResponse.isError == false) {
+          return Right(result.body);
         } else {
           return Left(commonResponse.message ?? '');
         }
@@ -104,7 +98,6 @@ class ApiProvider extends GetConnect implements IApiProvider {
     dynamic body, {
     Progress? uploadProgress,
     Map<String, File>? files,
-    String? headerLangCode,
   }) async {
     try {
       if (await ConnectivityManager().checkInternet()) {
@@ -124,34 +117,23 @@ class ApiProvider extends GetConnect implements IApiProvider {
           formData = body;
         }
 
-        var result = await post(ApiClient.apiBaseUrl + url, formData,
+        var result = await post(
+            ApiClient.apiBaseUrl + url, jsonEncode(formData),
             uploadProgress: uploadProgress,
             headers: {
-              'Accept': 'application/json',
-              if (headerLangCode != null) ...{
-                'Accept-Language': headerLangCode,
-              },
+              'accept': '*/*',
+              'Content-Type': 'application/json',
               if (token != null) ...{
                 'Authorization': 'Bearer $token',
               }
             });
-        debugPrint('${result.body}');
-        var commonResponse = CommonResponse<T>.fromJson(result.body)
-          ..responseCode = result.statusCode;
-        if (commonResponse.isTokenExpired) {
-          /// Show token expired popup
-          Utils.showPopupDialog(LocaleKeys.error.tr, commonResponse.message!,
-              textConfirm: LocaleKeys.signIn.tr,
-              isDismissible: false,
-              onWillPop: () => Future.value(false),
-              onConfirm: () {
-                Get.back();
-                Get.offAllNamed(AppRoutes.loginPage);
-              },
-              confirmTextColor: AppColors.colorBE002D);
-          return null;
-        } else if (commonResponse.isSuccess) {
-          return Right(commonResponse.data ?? commonResponse.message);
+
+        // Print response body and status code
+        debugPrint('Responsebody :- ${result.body}');
+        var commonResponse = CommonResponse<T>.fromJson(result.body);
+
+        if (commonResponse.isError == false) {
+          return Right(result.body);
         } else {
           return Left(commonResponse.message ?? '');
         }
@@ -180,23 +162,12 @@ class ApiProvider extends GetConnect implements IApiProvider {
             'Authorization': 'Bearer $token',
           }
         });
-        debugPrint('${result.body}');
-        var commonResponse = CommonResponse<T>.fromJson(result.body)
-          ..responseCode = result.statusCode;
-        if (commonResponse.isTokenExpired) {
-          /// Show token expired popup
-          Utils.showPopupDialog(LocaleKeys.error.tr, commonResponse.message!,
-              textConfirm: LocaleKeys.signIn.tr,
-              isDismissible: false,
-              onWillPop: () => Future.value(false),
-              onConfirm: () {
-                Get.back();
-                Get.offAllNamed(AppRoutes.loginPage);
-              },
-              confirmTextColor: AppColors.colorBE002D);
-          return null;
-        } else if (commonResponse.isSuccess) {
-          return Right(commonResponse.data ?? commonResponse.message);
+        // Print response body and status code
+        debugPrint('Responsebody :- ${result.body}');
+        var commonResponse = CommonResponse<T>.fromJson(result.body);
+
+        if (commonResponse.isError == false) {
+          return Right(result.body);
         } else {
           return Left(commonResponse.message ?? '');
         }
@@ -226,23 +197,46 @@ class ApiProvider extends GetConnect implements IApiProvider {
             'Authorization': 'Bearer $token',
           }
         });
-        debugPrint('${result.body}');
-        var commonResponse = CommonResponse<T>.fromJson(result.body)
-          ..responseCode = result.statusCode;
-        if (commonResponse.isTokenExpired) {
-          /// Show token expired popup
-          Utils.showPopupDialog(LocaleKeys.error.tr, commonResponse.message!,
-              textConfirm: LocaleKeys.signIn.tr,
-              isDismissible: false,
-              onWillPop: () => Future.value(false),
-              onConfirm: () {
-                Get.back();
-                Get.offAllNamed(AppRoutes.loginPage);
-              },
-              confirmTextColor: AppColors.colorBE002D);
-          return null;
-        } else if (commonResponse.isSuccess) {
-          return Right(commonResponse.data ?? commonResponse.message);
+        // Print response body and status code
+        debugPrint('Responsebody :- ${result.body}');
+        var commonResponse = CommonResponse<T>.fromJson(result.body);
+
+        if (commonResponse.isError == false) {
+          return Right(result.body);
+        } else {
+          return Left(commonResponse.message ?? '');
+        }
+      } else {
+        return Left(LocaleKeys.checkYourInternetConnection.tr);
+      }
+    } catch (e, s) {
+      debugPrint('$e \n $s');
+      return Left(LocaleKeys.somethingWentWrong.tr);
+    }
+  }
+
+  @override
+  Future<Either<String, dynamic>?> putMethod<T>(String url,
+      {String? headerLangCode}) async {
+    try {
+      if (await ConnectivityManager().checkInternet()) {
+        String? token = StorageManager().getAuthToken();
+
+        var result = await get(ApiClient.apiBaseUrl + url, headers: {
+          'Accept': 'application/json',
+          if (headerLangCode != null) ...{
+            'Accept-Language': headerLangCode,
+          },
+          if (token != null) ...{
+            'Authorization': 'Bearer $token',
+          }
+        });
+        // Print response body and status code
+        debugPrint('Responsebody :- ${result.body}');
+        var commonResponse = CommonResponse<T>.fromJson(result.body);
+
+        if (commonResponse.isError == false) {
+          return Right(result.body);
         } else {
           return Left(commonResponse.message ?? '');
         }

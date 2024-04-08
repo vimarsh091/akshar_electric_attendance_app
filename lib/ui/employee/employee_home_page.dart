@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:test_project/app/app_color.dart';
+import 'package:test_project/data/network/client/api_client.dart';
 import 'package:test_project/gen/assets.gen.dart';
 import 'package:test_project/ui/data/storage_manager.dart';
 import 'package:test_project/ui/employee/employee_home_controller.dart';
@@ -44,7 +45,7 @@ class EmployeeHomePage extends GetView<EmployeeHomeController> {
                           child: Column(
                             children: [
                               CommonAppImage(
-                                path: Assets.images.aksharLogo.path,
+                                path: ApiClient.apiBaseUrl,
                                 height: 90.w,
                                 width: 90.w,
                                 radius: 50,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:test_project/app/app_color.dart';
-import 'package:test_project/app/app_route.dart';
 import 'package:test_project/ui/login/login_controller.dart';
 import 'package:test_project/ui/widgets/common_app_image.dart';
 import 'package:test_project/utils/utils.dart';
@@ -65,8 +64,7 @@ class LoginPage extends GetView<LoginController> {
                 } else if (controller.passwordController.text.trim().isEmpty) {
                   Utils.showMessage('Error', 'Please enter password');
                 } else {
-                  // Get.offAndToNamed(AppRoutes.employeeHomePage);
-                  Get.offAndToNamed(AppRoutes.adminHomePage);
+                  controller.login();
                 }
               },
               child: Container(

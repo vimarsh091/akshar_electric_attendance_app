@@ -1,6 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:test_project/data/network/repository/user_auth_repository.dart';
+import 'package:test_project/app/app_route.dart';
+import 'package:test_project/data/network/models/LoginResponse.dart';
+import 'package:test_project/data/network/repository/repository.dart';
+import 'package:test_project/generated/locales.g.dart';
+import 'package:test_project/ui/data/storage_manager.dart';
+import 'package:test_project/utils/utils.dart';
 
 class LoginController extends GetxController {
   TextEditingController usernameController = TextEditingController();
@@ -9,18 +14,29 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    usernameController.text = 'Vimars';
-    passwordController.text = 'Password@123';
+    usernameController.text = 'admin@admin.com';
+    passwordController.text = 'Admin@123';
     //   var user = StorageManager().getLoggedInUser();
   }
 
-  void login() {
+  Future<void> login() async {
     var param = {
-      'username': 'abc user',
-      'password': 'Test@123',
+      'email': usernameController.text.trim(),
+      'password': passwordController.text.trim(),
     };
-    UserAuthRepository().loginUser(param).then((value) {
-      value?.fold((left) => null, (right) => null);
+    Repository().loginUser(param).then((value) {
+      value?.fold((left) => Utils.showMessage(LocaleKeys.error.tr, left),
+          (right) async {
+        LoginResponse user = right;
+
+        StorageManager().setAuthToken(user.data?.token ?? '');
+        StorageManager().setLoggedInUser(user);
+        if (user.data?.user?.isAdmin == true) {
+          Get.offAndToNamed(AppRoutes.adminHomePage);
+        } else {
+          Get.offAndToNamed(AppRoutes.employeeHomePage);
+        }
+      });
     });
   }
 }

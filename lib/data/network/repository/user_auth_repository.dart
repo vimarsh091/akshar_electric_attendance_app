@@ -9,15 +9,19 @@ import 'package:test_project/data/network/models/user_response.dart';
 class UserAuthRepository extends ApiProvider {
   Future<Either<String, String>?> forgotPasswordEmail(
       Map<String, dynamic> params) async {
-    var response = await postMethod(ApiClient.forgotPasswordEmail, params,
-        headerLangCode: 'en');
+    var response = await postMethod(
+      ApiClient.forgotPasswordEmail,
+      params,
+    );
     return response?.fold((l) => Left(l), (r) => Right(r as String));
   }
 
   Future<Either<String, UserResponse>?> loginUser(
       Map<String, dynamic> params) async {
-    var response = await postMethod<UserResponse>(ApiClient.loginUser, params,
-        headerLangCode: 'en');
+    var response = await postMethod<UserResponse>(
+      ApiClient.login,
+      params,
+    );
     return response?.fold((l) => Left(l), (r) => Right(r as UserResponse));
   }
 
@@ -39,8 +43,10 @@ class UserAuthRepository extends ApiProvider {
 
   Future<Either<String, UserResponse>?> socialLogin(
       Map<String, dynamic> params) async {
-    var response = await postMethod<UserResponse>(ApiClient.socialLogin, params,
-        headerLangCode: 'en');
+    var response = await postMethod<UserResponse>(
+      ApiClient.socialLogin,
+      params,
+    );
     return response?.fold((l) => Left(l), (r) => Right(r as UserResponse));
   }
 }
