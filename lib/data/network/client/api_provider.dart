@@ -118,7 +118,7 @@ class ApiProvider extends GetConnect implements IApiProvider {
         }
 
         var result = await post(
-            ApiClient.apiBaseUrl + url, jsonEncode(formData),
+            ApiClient.apiBaseUrl + url, formData,
             uploadProgress: uploadProgress,
             headers: {
               'accept': '*/*',

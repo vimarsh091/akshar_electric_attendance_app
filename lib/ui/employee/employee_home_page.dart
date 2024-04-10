@@ -45,7 +45,7 @@ class EmployeeHomePage extends GetView<EmployeeHomeController> {
                           child: Column(
                             children: [
                               CommonAppImage(
-                                path: ApiClient.apiBaseUrl,
+                                imagePath: ApiClient.apiBaseUrl,
                                 height: 90.w,
                                 width: 90.w,
                                 radius: 50,

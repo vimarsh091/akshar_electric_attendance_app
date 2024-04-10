@@ -74,7 +74,7 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
             children: [
               26.verticalSpace,
               CommonAppImage(
-                path: Assets.images.icAvatar.path,
+                imagePath: Assets.images.icAvatar.path,
                 height: 120.w,
                 width: 120.w,
                 fit: BoxFit.contain,
@@ -154,7 +154,7 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
                               ),
                               12.horizontalSpace,
                               CommonAppImage(
-                                path: Assets.images.icLogin,
+                                imagePath: Assets.images.icLogin,
                                 height: 65.w,
                                 width: 65.w,
                                 radius: 22,

@@ -27,7 +27,7 @@ class LoginPage extends GetView<LoginController> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CommonAppImage(
-                          path: Assets.images.icLogin,
+                          imagePath: Assets.images.icLogin,
                           height: 150.h,
                           width: 150.h),
                       30.verticalSpace,

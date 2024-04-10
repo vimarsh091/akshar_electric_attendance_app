@@ -69,6 +69,7 @@
   "privacyPolicy": "Privacy Policy",
   "termsAndConditions": "Terms & Conditions",
   "aboutUs": "About Us",
+  "noDataFound": "No data found",
   "pleaseSelectISDCode": "Please select ISD code",
   "newPasswordMustBeDiffFromCurrent": "New Password must be different from current password"
 }

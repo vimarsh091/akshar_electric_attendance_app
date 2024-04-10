@@ -1,9 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CommonAppImage extends StatelessWidget {
-  final String path;
+  final String imagePath;
   final double width;
   final double height;
   final double? radius;
@@ -11,7 +12,7 @@ class CommonAppImage extends StatelessWidget {
 
   const CommonAppImage(
       {super.key,
-      required this.path,
+      required this.imagePath,
       required this.height,
       required this.width,
       this.radius,
@@ -20,41 +21,52 @@ class CommonAppImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: height,
-        width: width,
-        clipBehavior: Clip.hardEdge,
-        decoration:
-            BoxDecoration(borderRadius: BorderRadius.circular(radius ?? 0)),
-        child: path.startsWith('http')
-            ? path.endsWith('svg')
-                ? SvgPicture.network(
-                    path,
-                    fit: fit ?? BoxFit.cover,
-                    height: height,
-                    width: width,
-                  )
-                : CachedNetworkImage(
-                    imageUrl: "http://via.placeholder.com/350x150",
-                    height: height,
-                    width: width,
-                    fit: fit,
-                    placeholder: (context, url) =>
-                        const Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                  )
-            : path.endsWith('svg')
-                ? SvgPicture.asset(
-                    path,
-                    fit: fit ?? BoxFit.cover,
-                    height: height,
-                    width: width,
-                  )
-                : Image.asset(
-                    path,
-                    width: width,
-                    height: height,
-                    fit: fit ?? BoxFit.cover,
-                  ));
+      height: height,
+      width: width,
+      clipBehavior: Clip.hardEdge,
+      decoration:
+          BoxDecoration(borderRadius: BorderRadius.circular(radius ?? 0)),
+      child: imagePath.startsWith('http')
+          ? imagePath.endsWith('svg')
+              ? SvgPicture.network(
+                  imagePath,
+                  height: height,
+                  width: width,
+                  fit: BoxFit.cover,
+                )
+              : Image.network(
+                  imagePath,
+                  height: height,
+                  width: width,
+                  fit: fit,
+                )
+          : imagePath.contains('assets')
+              ? imagePath.endsWith('svg')
+                  ? SvgPicture.asset(
+                      imagePath,
+                      height: height,
+                      width: width,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.asset(
+                      imagePath,
+                      height: height,
+                      width: width,
+                      fit: fit,
+                    )
+              : imagePath.endsWith('svg')
+                  ? SvgPicture.file(
+                      File(imagePath),
+                      height: height,
+                      width: width,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.file(
+                      File(imagePath),
+                      height: height,
+                      width: width,
+                      fit: fit,
+                    ),
+    );
   }
 }

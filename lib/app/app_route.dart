@@ -20,13 +20,13 @@ class AppRoutes {
   static List<GetPage> routes = [
     GetPage(
         name: AppRoutes.loginPage,
-        page: () => LoginPage(),
+        page: () => const LoginPage(),
         binding: BindingsBuilder(() {
           Get.lazyPut(() => LoginController());
         })),
     GetPage(
         name: AppRoutes.employeeHomePage,
-        page: () => EmployeeHomePage(),
+        page: () => const EmployeeHomePage(),
         binding: BindingsBuilder(() {
           Get.lazyPut(() => EmployeeHomeController());
         })),
@@ -38,13 +38,13 @@ class AppRoutes {
         })),
     GetPage(
         name: AppRoutes.employeeDetailsPage,
-        page: () => EmployeeDetailsPage(),
+        page: () => const EmployeeDetailsPage(),
         binding: BindingsBuilder(() {
           Get.lazyPut(() => EmployeeDetailsController());
         })),
     GetPage(
         name: AppRoutes.addEmployeePage,
-        page: () => AddEmployeePage(),
+        page: () => const AddEmployeePage(),
         binding: BindingsBuilder(() {
           Get.lazyPut(() => AddEmployeeController());
         }))

@@ -2,8 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:test_project/data/network/models/get_me_response.dart';
+import 'package:test_project/data/network/repository/repository.dart';
 import 'package:test_project/gen/assets.gen.dart';
+import 'package:test_project/generated/locales.g.dart';
 import 'package:test_project/ui/data/storage_manager.dart';
+import 'package:test_project/utils/utils.dart';
 
 class EmployeeHomeController extends GetxController {
   TextEditingController siteNameController = TextEditingController();
@@ -17,12 +21,16 @@ class EmployeeHomeController extends GetxController {
       DateTime.now().second);
   Timer? _timer;
   Rx<Duration> elapsedTime = Duration.zero.obs;
+  Rxn<GetMeResponse> getMeData = Rxn<GetMeResponse>();
 
   @override
   void onInit() {
     super.onInit();
-    _initPreferences();
-    _startTimer();
+    /* _initPreferences();
+    _startTimer();*/
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      getMe();
+    });
   }
 
   void _calculateElapsedTime() {
@@ -53,5 +61,14 @@ class EmployeeHomeController extends GetxController {
         elapsedTime.value = elapsedTime.value + const Duration(seconds: 1);
       });
     }
+  }
+
+  void getMe() async {
+    Repository().getMe().then((value) {
+      value?.fold((left) => Utils.showMessage(LocaleKeys.error.tr, left),
+          (right) async {
+        getMeData.value = right;
+      });
+    });
   }
 }

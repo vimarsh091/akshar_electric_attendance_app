@@ -10,7 +10,6 @@ class AppTranslation {
 
 class LocaleKeys {
   LocaleKeys._();
-
   static const welcomeBack = 'welcomeBack';
   static const pleaseEnterEmailPass = 'pleaseEnterEmailPass';
   static const emailAddress = 'emailAddress';
@@ -83,6 +82,7 @@ class LocaleKeys {
   static const privacyPolicy = 'privacyPolicy';
   static const termsAndConditions = 'termsAndConditions';
   static const aboutUs = 'aboutUs';
+  static const noDataFound = 'noDataFound';
   static const pleaseSelectISDCode = 'pleaseSelectISDCode';
   static const newPasswordMustBeDiffFromCurrent =
       'newPasswordMustBeDiffFromCurrent';
@@ -165,6 +165,7 @@ class Locales {
     'privacyPolicy': 'Privacy Policy',
     'termsAndConditions': 'Terms & Conditions',
     'aboutUs': 'About Us',
+    'noDataFound': 'No data found',
     'pleaseSelectISDCode': 'Please select ISD code',
     'newPasswordMustBeDiffFromCurrent':
         'New Password must be different from current password',
