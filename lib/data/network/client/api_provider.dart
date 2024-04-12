@@ -1,17 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:test_project/app/app_color.dart';
-import 'package:test_project/app/app_route.dart';
 import 'package:test_project/data/network/client/api_client.dart';
 import 'package:test_project/data/network/client/connectivity_manager.dart';
 import 'package:test_project/generated/locales.g.dart';
 import 'package:test_project/ui/data/storage_manager.dart';
 
-import '../../../utils/utils.dart';
 import '../models/common_response.dart';
 
 /// Define own methods of all types of api's. Like., GET, POST..etc
@@ -117,8 +113,7 @@ class ApiProvider extends GetConnect implements IApiProvider {
           formData = body;
         }
 
-        var result = await post(
-            ApiClient.apiBaseUrl + url, formData,
+        var result = await post(ApiClient.apiBaseUrl + url, formData,
             uploadProgress: uploadProgress,
             headers: {
               'accept': '*/*',

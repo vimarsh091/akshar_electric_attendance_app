@@ -15,13 +15,15 @@ class AddEmployeeController extends GetxController {
   RxString profilePhoto = Assets.images.icAvatar.path.obs;
 
   void addUser() {
-    var param = {
-      'firstName': firstNameController.text.trim(),
-      'lastName': lastNameController.text.trim(),
-      'email': 'test@gmail.com',
-      'phone': '+91${mobileNumberController.text.trim()}',
-    };
-    Repository().addUser(param, File(profilePhoto.value)).then((value) {
+    Repository()
+        .addUser(
+      email: 'test687@gmail.com',
+      firstName: firstNameController.text.trim(),
+      image: File(profilePhoto.value),
+      lastName: lastNameController.text.trim(),
+      mobileNumber: '+91${mobileNumberController.text.trim()}',
+    )
+        .then((value) {
       value?.fold((left) => Utils.showMessage(LocaleKeys.error.tr, left),
           (right) {
         Get.back(result: true);
