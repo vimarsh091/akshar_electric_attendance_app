@@ -9,6 +9,7 @@ import 'package:test_project/utils/utils.dart';
 
 class AdminHomeController extends GetxController {
   Rxn<GetMeResponse> getMeData = Rxn<GetMeResponse>();
+  RxBool isLoading = false.obs;
 
   var pageIndex = 1;
   String searchedText = '';
@@ -25,9 +26,11 @@ class AdminHomeController extends GetxController {
   }
 
   void getUserList() {
+    isLoading.value = true;
     Repository()
         .getUserList(name: searchedText, limit: 18, page: pageIndex)
         .then((value) {
+      isLoading.value = false;
       value?.fold((left) => Utils.showMessage(LocaleKeys.error.tr, left),
           (right) {
         userList.assignAll(right.data ?? []);

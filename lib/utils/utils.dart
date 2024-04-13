@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:test_project/app/app_color.dart';
 import 'package:test_project/generated/locales.g.dart';
 
 class Utils {
   /// Show common snack bar messages
   static void showMessage(String title, String message,
-      {snackPosition = SnackPosition.BOTTOM}) {
-    Get.snackbar(title, message, snackPosition: snackPosition);
+      {snackPosition = SnackPosition.TOP}) {
+    Get.snackbar(title, message,
+        snackPosition: snackPosition,
+        backgroundColor: AppColors.colorAppTheme.withAlpha(80));
   }
 
   /// Show popup dialog with title and message
@@ -98,4 +100,18 @@ class Utils {
       enableDrag: false,
     );
   }
+
+  static Widget commonProgressIndicator({double? topPadding}) {
+    return Align(
+      alignment: Alignment.center,
+      child: Padding(
+        padding: EdgeInsets.only(top: topPadding ?? 0.0),
+        child: LoadingAnimationWidget.threeArchedCircle(
+          color: AppColors.colorAppTheme,
+          size: 50,
+        ),
+      ),
+    );
+  }
+
 }

@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:test_project/data/network/client/api_client.dart';
 import 'package:test_project/data/network/client/api_provider.dart';
 import 'package:test_project/data/network/models/LoginResponse.dart';
+import 'package:test_project/data/network/models/UserDetailsResponse.dart';
+import 'package:test_project/data/network/models/UserSitesResponse.dart';
 import 'package:test_project/data/network/models/add_user_response.dart';
 import 'package:test_project/data/network/models/common_response.dart';
 import 'package:test_project/data/network/models/get_me_response.dart';
@@ -49,16 +51,31 @@ class Repository extends ApiProvider {
     });
   }
 
-/*  Future<Either<String, AddUserResponse>?> addUser(
-      Map<String, dynamic> params, File image) async {
-    var response = await postMethod<AddUserResponse>(
-        ApiClient.userDetail, params,
-        files: {'image': image});
+  Future<Either<String, UserDetailsResponse>?> getUserDetails(
+      {String? id}) async {
+    String url = ApiClient.userDetail;
+
+    url += '/$id';
+
+    var response = await getMethod(url);
     return response?.fold((l) => Left(l), (r) {
-      var result = AddUserResponse.fromJson(r);
+      var result = UserDetailsResponse.fromJson(r);
       return Right(result);
     });
-  }*/
+  }
+
+  Future<Either<String, UserSitesResponse>?> getUserSites(
+      {String? id, int? page}) async {
+    String url = ApiClient.userDetail;
+
+    url += '/$id/sites?page=$page&limit=${20}';
+
+    var response = await getMethod(url);
+    return response?.fold((l) => Left(l), (r) {
+      var result = UserSitesResponse.fromJson(r);
+      return Right(result);
+    });
+  }
 
   Future<Either<String, AddUserResponse>?> addUser(
       {String? firstName,
@@ -100,13 +117,12 @@ class Repository extends ApiProvider {
       var commonResponse = CommonResponse.fromJson(jsonDecode(response.body));
 
       if (commonResponse.isError == false) {
-        return Right(commonResponse as AddUserResponse);
+        return Right(AddUserResponse.fromJson(jsonDecode(response.body)));
       } else {
         return Left(commonResponse.message ?? '');
       }
     } catch (e) {
       return Left('Spmething went wrong');
     }
-
   }
 }

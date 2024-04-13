@@ -10,6 +10,7 @@ import 'package:test_project/utils/utils.dart';
 class LoginController extends GetxController {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  RxBool isLoading = false.obs;
 
   @override
   void onInit() {
@@ -20,13 +21,16 @@ class LoginController extends GetxController {
   }
 
   Future<void> login() async {
+    isLoading.value = true;
     var param = {
       'email': usernameController.text.trim(),
       'password': passwordController.text.trim(),
     };
     Repository().loginUser(param).then((value) {
-      value?.fold((left) => Utils.showMessage(LocaleKeys.error.tr, left),
-          (right) async {
+      value?.fold((left) {
+        isLoading.value = false;
+        Utils.showMessage(LocaleKeys.error.tr, left);
+      }, (right) async {
         LoginResponse user = right;
 
         StorageManager().setAuthToken(user.data?.token ?? '');

@@ -4,6 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:popup_menu/popup_menu.dart';
 import 'package:test_project/app/app_color.dart';
+import 'package:test_project/data/network/client/api_client.dart';
 import 'package:test_project/gen/assets.gen.dart';
 import 'package:test_project/ui/employee_details/employee_details_controller.dart';
 import 'package:test_project/ui/widgets/common_app_bar.dart';
@@ -29,31 +30,34 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
             PopupMenu(
                     context: context,
                     config: MenuConfig.forList(
-                      backgroundColor: AppColors.colorAppTheme,
-                      arrowHeight: 16,
-                      itemWidth: 120.w,
-                      lineColor: Colors.red
-                    ),
+                        backgroundColor: AppColors.colorAppTheme,
+                        arrowHeight: 16,
+                        itemWidth: 120.w,
+                        lineColor: Colors.red),
                     items: [
                       MenuItem.forList(
-                          textStyle: TextStyle(fontSize: 12,color: Colors.white),
+                          textStyle: const TextStyle(
+                              fontSize: 12, color: Colors.white),
                           title: 'Edit Profile',
-                          image: Icon(Icons.mode_edit_rounded,
+                          image: const Icon(Icons.mode_edit_rounded,
                               color: Colors.white, size: 20)),
                       MenuItem.forList(
-                          textStyle: TextStyle(fontSize: 12,color: Colors.white),
+                          textStyle: const TextStyle(
+                              fontSize: 12, color: Colors.white),
                           title: 'Call Now',
-                          image: Icon(Icons.call_rounded,
+                          image: const Icon(Icons.call_rounded,
                               color: Colors.white, size: 20)),
                       MenuItem.forList(
-                          textStyle: TextStyle(fontSize: 12,color: Colors.white),
+                          textStyle: const TextStyle(
+                              fontSize: 12, color: Colors.white),
                           title: 'Share Password',
-                          image: Icon(Icons.password_rounded,
+                          image: const Icon(Icons.password_rounded,
                               color: Colors.white, size: 20)),
                       MenuItem.forList(
-                          textStyle: TextStyle(color: Colors.red, fontSize: 12),
+                          textStyle:
+                              const TextStyle(color: Colors.red, fontSize: 12),
                           title: 'Delete Profile',
-                          image: Icon(Icons.delete_rounded,
+                          image: const Icon(Icons.delete_rounded,
                               color: Colors.red, size: 20)),
                     ],
                     onClickMenu: controller.onClickMenu,
@@ -65,112 +69,145 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
         ),
       ),
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              26.verticalSpace,
-              CommonAppImage(
-                imagePath: Assets.images.icAvatar.path,
-                height: 120.w,
-                width: 120.w,
-                fit: BoxFit.contain,
-                radius: 100,
-              ),
-              12.verticalSpace,
-              GestureDetector(
-                onTap: () => controller.slidableController.close(),
-                child: Text(
-                  'Prashant Rudani',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
-                ),
-              ),
-              20.verticalSpace,
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: 20,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Slidable(
-                      // Specify a key if the Slidable is dismissible.
-                      key: const ValueKey(0),
-                      endActionPane: ActionPane(
-                        motion: const BehindMotion(),
-                        openThreshold: 0.3,
-                        closeThreshold: 0.3,
-                        dragDismissible: true,
-                        extentRatio: 0.3,
-                        children: [
-                          SlidableAction(
-                            onPressed: (_) {
-                              controller.slidableController.close();
-                              showEditDetailsSheet();
-                            },
-                            backgroundColor: AppColors.colorAppTheme,
-                            foregroundColor: Colors.white,
-                            icon: Icons.edit,
-                            label: 'Edit',
-                            autoClose: true,
-                            borderRadius: BorderRadius.circular(22),
-                          ),
-                        ],
-                      ),
-
-                      // The child of the Slidable is what the user sees when the
-                      // component is not dragged.
-                      child: Card(
-                        elevation: 3,
-                        shadowColor: AppColors.colorAppTheme,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            side: BorderSide(
-                                color: AppColors.colorAppTheme, width: 0.5)),
-                        child: Padding(
-                          padding: EdgeInsets.all(12.w),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Date :- 24-03-2024'),
-                                    4.verticalSpace,
-                                    Text('Date :- 24-03-2024'),
-                                    4.verticalSpace,
-                                    Text('Date :- 24-03-2024'),
-                                    4.verticalSpace,
-                                    Text('Date :- 24-03-2024'),
-                                    4.verticalSpace,
-                                    Text('Date :- 24-03-2024'),
-                                  ],
-                                ),
-                              ),
-                              12.horizontalSpace,
-                              CommonAppImage(
-                                imagePath: Assets.images.icLogin,
-                                height: 65.w,
-                                width: 65.w,
-                                radius: 22,
-                                fit: BoxFit.contain,
-                              )
-                            ],
+      body: Obx(
+        () => controller.isLoading.isTrue
+            ? Utils.commonProgressIndicator()
+            : SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                controller: controller.scrollController,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Obx(
+                    () => Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        26.verticalSpace,
+                        CommonAppImage(
+                          imagePath: controller
+                                      .userDetails.value?.data?.avatar !=
+                                  null
+                              ? '${ApiClient.apiBaseUrl}${controller.userDetails.value?.data?.avatar ?? ''}'
+                              : Assets.images.icAvatar.path,
+                          height: 120.w,
+                          width: 120.w,
+                          fit: BoxFit.cover,
+                          radius: 100,
+                        ),
+                        12.verticalSpace,
+                        GestureDetector(
+                          onTap: () => controller.slidableController.close(),
+                          child: Text(
+                            '${controller.userDetails.value?.data?.firstName ?? ''} ${controller.userDetails.value?.data?.lastName ?? ''}',
+                            style: const TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.w700),
                           ),
                         ),
-                      ),
+                        20.verticalSpace,
+                        Obx(
+                          () => ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: controller.siteList.length,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              var item = controller.siteList[index];
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Slidable(
+                                      // Specify a key if the Slidable is dismissible.
+                                      key: const ValueKey(0),
+                                      endActionPane: ActionPane(
+                                        motion: const BehindMotion(),
+                                        openThreshold: 0.3,
+                                        closeThreshold: 0.3,
+                                        dragDismissible: true,
+                                        extentRatio: 0.3,
+                                        children: [
+                                          SlidableAction(
+                                            onPressed: (_) {
+                                              controller.slidableController
+                                                  .close();
+                                              showEditDetailsSheet();
+                                            },
+                                            backgroundColor:
+                                                AppColors.colorAppTheme,
+                                            foregroundColor: Colors.white,
+                                            icon: Icons.edit,
+                                            label: 'Edit',
+                                            autoClose: true,
+                                            borderRadius:
+                                                BorderRadius.circular(22),
+                                          ),
+                                        ],
+                                      ),
+
+                                      // The child of the Slidable is what the user sees when the
+                                      // component is not dragged.
+                                      child: Card(
+                                        elevation: 3,
+                                        shadowColor: AppColors.colorAppTheme,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            side: const BorderSide(
+                                                color: AppColors.colorAppTheme,
+                                                width: 0.5)),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(12.w),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                        'Date :- ${item.date}'),
+                                                    4.verticalSpace,
+                                                    Text(
+                                                        'Site name :- ${item.siteName}'),
+                                                    4.verticalSpace,
+                                                    Text(
+                                                        'Check in :- ${item.checkIn}'),
+                                                    4.verticalSpace,
+                                                    Text(
+                                                        'Check out :- ${item.checkOut}'),
+                                                    4.verticalSpace,
+                                                    Text(
+                                                        'Total time :- ${item.totalTime}'),
+                                                  ],
+                                                ),
+                                              ),
+                                              12.horizontalSpace,
+                                              CommonAppImage(
+                                                imagePath:
+                                                    '${ApiClient.apiBaseUrl}${item.siteImage}',
+                                                height: 95.w,
+                                                width: 95.w,
+                                                radius: 22,
+                                                fit: BoxFit.cover,
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      ],
                     ),
-                  );
-                },
-              )
-            ],
-          ),
-        ),
+                  ),
+                ),
+              ),
       ),
     );
   }
@@ -181,7 +218,7 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
         elevation: 3,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(22),
-            side: BorderSide(color: AppColors.colorAppTheme, width: 2)),
+            side: const BorderSide(color: AppColors.colorAppTheme, width: 2)),
         isDismissible: true,
         isScrollControlled: true,
         backgroundColor: Colors.white,
@@ -191,7 +228,7 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
             mainAxisSize: MainAxisSize.min,
             children: [
               12.verticalSpace,
-              Text(
+              const Text(
                 'Edit Details',
                 style: TextStyle(
                     color: AppColors.colorAppTheme,
@@ -207,7 +244,7 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide:
-                            BorderSide(color: AppColors.colorAppTheme))),
+                            const BorderSide(color: AppColors.colorAppTheme))),
               ),
               20.verticalSpace,
               TextField(
@@ -218,7 +255,7 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide:
-                            BorderSide(color: AppColors.colorAppTheme))),
+                            const BorderSide(color: AppColors.colorAppTheme))),
               ),
               20.verticalSpace,
               TextField(
@@ -229,7 +266,7 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide:
-                            BorderSide(color: AppColors.colorAppTheme))),
+                            const BorderSide(color: AppColors.colorAppTheme))),
               ),
               40.verticalSpace,
               GestureDetector(
