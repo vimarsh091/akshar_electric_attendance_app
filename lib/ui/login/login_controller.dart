@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:test_project/app/app_route.dart';
-import 'package:test_project/data/network/models/LoginResponse.dart';
+import 'package:test_project/data/network/models/login_response.dart';
 import 'package:test_project/data/network/repository/repository.dart';
 import 'package:test_project/generated/locales.g.dart';
 import 'package:test_project/ui/data/storage_manager.dart';

@@ -6,9 +6,9 @@ import 'package:get/get.dart';
 import 'package:popup_menu/popup_menu.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:test_project/app/app_route.dart';
-import 'package:test_project/data/network/models/AppDataModel.dart';
-import 'package:test_project/data/network/models/UserDetailsResponse.dart';
-import 'package:test_project/data/network/models/UserSitesResponse.dart'
+import 'package:test_project/data/network/models/app_data_model.dart';
+import 'package:test_project/data/network/models/user_detail_response.dart';
+import 'package:test_project/data/network/models/user_sites_response.dart'
     as siteResponse;
 import 'package:test_project/data/network/repository/repository.dart';
 import 'package:test_project/generated/locales.g.dart';
@@ -41,12 +41,7 @@ class EmployeeDetailsController extends GetxController
     });
 
     scrollController.addListener(() {
-      if (scrollController.position.extentAfter <= 0 &&
-          isLoading.isFalse &&
-          isLoadingMore.isFalse &&
-          isAbleToLoadMore.isTrue) {
-        loadMoreData();
-      }
+      loadMoreData();
     });
   }
 
@@ -125,7 +120,12 @@ class EmployeeDetailsController extends GetxController
   }
 
   void loadMoreData() {
-    pageIndex += 1;
-    getUserSites();
+    if (scrollController.position.extentAfter <= 0 &&
+        isLoading.isFalse &&
+        isLoadingMore.isFalse &&
+        isAbleToLoadMore.isTrue) {
+      pageIndex += 1;
+      getUserSites();
+    }
   }
 }

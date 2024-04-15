@@ -1,6 +1,7 @@
 import 'package:flutter/animation.dart';
 import 'package:get/get.dart';
 import 'package:test_project/app/app_route.dart';
+import 'package:test_project/ui/data/storage_manager.dart';
 
 class SplashController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -20,7 +21,19 @@ class SplashController extends GetxController
     _controller.forward().whenComplete(() {
       // After the animation completes, stop the controller
       _controller.stop();
-      Get.offAndToNamed(AppRoutes.loginPage);
+      redirectUser();
     });
+  }
+
+  void redirectUser() {
+    var loggedInUser = StorageManager().getLoggedInUser();
+
+    if (loggedInUser.data?.user?.isAdmin == false) {
+      Get.offAndToNamed(AppRoutes.employeeHomePage);
+    } else if (loggedInUser.data?.user?.isAdmin == true) {
+      Get.offAndToNamed(AppRoutes.adminHomePage);
+    } else {
+      Get.offAndToNamed(AppRoutes.loginPage);
+    }
   }
 }

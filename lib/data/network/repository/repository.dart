@@ -5,9 +5,9 @@ import 'package:either_dart/either.dart';
 import 'package:http/http.dart' as http;
 import 'package:test_project/data/network/client/api_client.dart';
 import 'package:test_project/data/network/client/api_provider.dart';
-import 'package:test_project/data/network/models/LoginResponse.dart';
-import 'package:test_project/data/network/models/UserDetailsResponse.dart';
-import 'package:test_project/data/network/models/UserSitesResponse.dart';
+import 'package:test_project/data/network/models/login_response.dart';
+import 'package:test_project/data/network/models/user_detail_response.dart';
+import 'package:test_project/data/network/models/user_sites_response.dart';
 import 'package:test_project/data/network/models/add_user_response.dart';
 import 'package:test_project/data/network/models/common_response.dart';
 import 'package:test_project/data/network/models/get_me_response.dart';
@@ -68,7 +68,7 @@ class Repository extends ApiProvider {
       {String? id, int? page}) async {
     String url = ApiClient.userDetail;
 
-    url += '/$id/sites?page=$page&limit=${20}';
+    url += '/$id/sites?page=$page&limit=${2}';
 
     var response = await getMethod(url);
     return response?.fold((l) => Left(l), (r) {

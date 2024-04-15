@@ -2,9 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 import 'package:test_project/data/network/client/api_client.dart';
-import 'package:test_project/data/network/models/AppDataModel.dart';
+import 'package:test_project/data/network/models/app_data_model.dart';
 import 'package:test_project/data/network/repository/repository.dart';
 import 'package:test_project/gen/assets.gen.dart';
 import 'package:test_project/generated/locales.g.dart';
@@ -41,7 +40,8 @@ class AddEmployeeController extends GetxController {
             : Assets.images.icAvatar.path;
         firstNameController.text = result.data?.firstName ?? '';
         lastNameController.text = result.data?.lastName ?? '';
-        mobileNumberController.text = result.data?.phone?.replaceFirst('+91', '') ?? '';
+        mobileNumberController.text =
+            result.data?.phone?.replaceFirst('+91', '') ?? '';
       });
     });
   }

@@ -197,6 +197,19 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
                                         ),
                                       ),
                                     ),
+                                    if (index == controller.siteList.length - 1 &&
+                                        controller.isAbleToLoadMore.isTrue)
+                                      SizedBox(
+                                        width: 30,
+                                        height: 30,
+                                        child: Obx(() => Visibility(
+                                            visible:
+                                                controller.isLoadingMore.value,
+                                            child:
+                                                const CircularProgressIndicator(
+                                              color: AppColors.colorAppTheme,
+                                            ))),
+                                      )
                                   ],
                                 ),
                               );

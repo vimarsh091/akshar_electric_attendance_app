@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:test_project/app/app_color.dart';
 import 'package:test_project/app/app_route.dart';
-import 'package:test_project/data/network/models/AppDataModel.dart';
+import 'package:test_project/data/network/models/app_data_model.dart';
 import 'package:test_project/generated/locales.g.dart';
 import 'package:test_project/ui/admin/admin_home_controller.dart';
 import 'package:test_project/ui/widgets/common_app_bar.dart';

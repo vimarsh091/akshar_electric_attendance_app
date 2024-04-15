@@ -1,5 +1,5 @@
 import 'package:get_storage/get_storage.dart';
-import 'package:test_project/data/network/models/LoginResponse.dart';
+import 'package:test_project/data/network/models/login_response.dart';
 
 class StorageManager {
   final box = GetStorage();
@@ -17,7 +17,7 @@ class StorageManager {
     box.write(StorageManager.todayPunchInTime, timeStamp);
   }
 
-  String getLoggedInUser() {
+  LoginResponse getLoggedInUser() {
     return box.read(StorageManager.user);
   }
 
