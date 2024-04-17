@@ -176,6 +176,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "cr_calendar",
+      "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/cr_calendar-1.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "cross_file",
       "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/cross_file-0.3.4+1",
       "packageUri": "lib/",
@@ -435,15 +441,21 @@
     },
     {
       "name": "intl",
-      "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/intl-0.19.0",
+      "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/intl-0.18.1",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "2.12"
     },
     {
       "name": "io",
       "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/io-1.0.4",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "jiffy",
+      "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/jiffy-6.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
     },
     {
       "name": "js",
@@ -630,6 +642,12 @@
       "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/rxdart-0.27.7",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "scrollable_positioned_list",
+      "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/scrollable_positioned_list-0.3.8",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
     },
     {
       "name": "share_plus",
@@ -878,7 +896,7 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-04-13T07:53:20.689981Z",
+  "generated": "2024-04-17T15:44:05.398834Z",
   "generator": "pub",
   "generatorVersion": "3.3.0"
 }

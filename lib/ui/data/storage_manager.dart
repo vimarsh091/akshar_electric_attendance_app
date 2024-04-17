@@ -17,8 +17,8 @@ class StorageManager {
     box.write(StorageManager.todayPunchInTime, timeStamp);
   }
 
-  LoginResponse getLoggedInUser() {
-    return box.read(StorageManager.user);
+  LoginResponse? getLoggedInUser() {
+    return LoginResponse.fromJson(box.read(StorageManager.user));
   }
 
 

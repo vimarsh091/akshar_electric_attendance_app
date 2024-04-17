@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
 import 'package:popup_menu/popup_menu.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:test_project/app/app_route.dart';
@@ -28,6 +29,7 @@ class EmployeeDetailsController extends GetxController
   RxBool isLoadingMore = false.obs;
   RxBool isAbleToLoadMore = false.obs;
   int pageIndex = 1;
+  RxString selectedDateRangeText = 'Select date range'.obs ;
   ScrollController scrollController = ScrollController();
   RxList<siteResponse.Data> siteList = <siteResponse.Data>[].obs;
 

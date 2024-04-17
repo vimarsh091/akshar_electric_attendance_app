@@ -1,3 +1,4 @@
+import 'package:cr_calendar/cr_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -9,6 +10,7 @@ import 'package:test_project/gen/assets.gen.dart';
 import 'package:test_project/ui/employee_details/employee_details_controller.dart';
 import 'package:test_project/ui/widgets/common_app_bar.dart';
 import 'package:test_project/ui/widgets/common_app_image.dart';
+import 'package:test_project/utils/extentions.dart';
 import 'package:test_project/utils/utils.dart';
 
 class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
@@ -94,13 +96,24 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
                           radius: 100,
                         ),
                         12.verticalSpace,
-                        GestureDetector(
-                          onTap: () => controller.slidableController.close(),
-                          child: Text(
-                            '${controller.userDetails.value?.data?.firstName ?? ''} ${controller.userDetails.value?.data?.lastName ?? ''}',
-                            style: const TextStyle(
-                                fontSize: 22, fontWeight: FontWeight.w700),
-                          ),
+                        Text(
+                          '${controller.userDetails.value?.data?.firstName ?? ''} ${controller.userDetails.value?.data?.lastName ?? ''}',
+                          style: const TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.w700),
+                        ),
+                        12.verticalSpace,
+                        Card(
+                          shape: RoundedRectangleBorder(),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Obx(
+                                () => Text(controller.selectedDateRangeText.value,
+                                  style: const TextStyle(
+                                      fontSize: 22, fontWeight: FontWeight.w600)),
+                            ),
+                          ).onTap(() {
+                            _showDatePicker(Get.context!);
+                          }),
                         ),
                         20.verticalSpace,
                         Obx(
@@ -197,7 +210,8 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
                                         ),
                                       ),
                                     ),
-                                    if (index == controller.siteList.length - 1 &&
+                                    if (index ==
+                                            controller.siteList.length - 1 &&
                                         controller.isAbleToLoadMore.isTrue)
                                       SizedBox(
                                         width: 30,
@@ -315,5 +329,29 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
             ],
           ),
         ));
+  }
+
+  /// Show calendar in pop up dialog for selecting date range for calendar event.
+  void _showDatePicker(BuildContext context) {
+    showCrDatePicker(
+      context,
+      properties: DatePickerProperties(
+        pickerMode: TouchMode.rangeSelection,
+        firstWeekDay: WeekDay.monday,
+        okButtonBuilder: (onPress) => ElevatedButton(
+          child: const Text('OK'),
+          onPressed: () {
+          },
+        ),
+        cancelButtonBuilder: (onPress) => OutlinedButton(
+          child: const Text('CANCEL'),
+          onPressed: () {},
+        ),
+        initialPickerDate: DateTime.now(),
+        onDateRangeSelected: (DateTime? rangeBegin, DateTime? rangeEnd) {
+          controller.selectedDateRangeText.value = '${rangeBegin} to ${rangeEnd}';
+        },
+      ),
+    );
   }
 }
