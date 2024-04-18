@@ -2,7 +2,7 @@
 class ApiClient {
   ApiClient._();
 
-  static const String apiBaseUrl = 'http://192.168.155.175:9000/';
+  static const String apiBaseUrl = 'http://192.168.156.175:9000/';
 
   static const String appVersion = '/settings/app-version';
   static const String contentPages = '/content-pages';

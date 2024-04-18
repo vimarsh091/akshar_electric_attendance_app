@@ -114,10 +114,6 @@ convert
 2.18
 file:///home/vimarsh/.pub-cache/hosted/pub.dev/convert-3.1.1/
 file:///home/vimarsh/.pub-cache/hosted/pub.dev/convert-3.1.1/lib/
-cr_calendar
-3.0
-file:///home/vimarsh/.pub-cache/hosted/pub.dev/cr_calendar-1.2.1/
-file:///home/vimarsh/.pub-cache/hosted/pub.dev/cr_calendar-1.2.1/lib/
 cross_file
 3.3
 file:///home/vimarsh/.pub-cache/hosted/pub.dev/cross_file-0.3.4+1/
@@ -130,6 +126,10 @@ cupertino_icons
 2.19
 file:///home/vimarsh/.pub-cache/hosted/pub.dev/cupertino_icons-1.0.6/
 file:///home/vimarsh/.pub-cache/hosted/pub.dev/cupertino_icons-1.0.6/lib/
+custom_date_range_picker
+2.17
+file:///home/vimarsh/.pub-cache/hosted/pub.dev/custom_date_range_picker-1.0.10/
+file:///home/vimarsh/.pub-cache/hosted/pub.dev/custom_date_range_picker-1.0.10/lib/
 dart_style
 3.0
 file:///home/vimarsh/.pub-cache/hosted/pub.dev/dart_style-2.3.6/
@@ -286,10 +286,6 @@ io
 2.12
 file:///home/vimarsh/.pub-cache/hosted/pub.dev/io-1.0.4/
 file:///home/vimarsh/.pub-cache/hosted/pub.dev/io-1.0.4/lib/
-jiffy
-2.19
-file:///home/vimarsh/.pub-cache/hosted/pub.dev/jiffy-6.2.1/
-file:///home/vimarsh/.pub-cache/hosted/pub.dev/jiffy-6.2.1/lib/
 js
 3.1
 file:///home/vimarsh/.pub-cache/hosted/pub.dev/js-0.7.1/
@@ -414,10 +410,6 @@ rxdart
 2.12
 file:///home/vimarsh/.pub-cache/hosted/pub.dev/rxdart-0.27.7/
 file:///home/vimarsh/.pub-cache/hosted/pub.dev/rxdart-0.27.7/lib/
-scrollable_positioned_list
-2.15
-file:///home/vimarsh/.pub-cache/hosted/pub.dev/scrollable_positioned_list-0.3.8/
-file:///home/vimarsh/.pub-cache/hosted/pub.dev/scrollable_positioned_list-0.3.8/lib/
 share_plus
 3.3
 file:///home/vimarsh/.pub-cache/hosted/pub.dev/share_plus-8.0.3/

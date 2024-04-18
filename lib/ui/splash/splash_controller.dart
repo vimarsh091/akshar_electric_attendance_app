@@ -27,7 +27,7 @@ class SplashController extends GetxController
 
   void redirectUser() {
     // var loggedInUser = StorageManager().getLoggedInUser();
-    Get.offAndToNamed(AppRoutes.adminHomePage);
+    Get.offAndToNamed(AppRoutes.loginPage);
    /* if (loggedInUser?.data?.user?.isAdmin == false) {
       Get.offAndToNamed(AppRoutes.employeeHomePage);
     } else if (loggedInUser?.data?.user?.isAdmin == true) {

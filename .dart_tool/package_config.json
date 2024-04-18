@@ -176,12 +176,6 @@
       "languageVersion": "2.18"
     },
     {
-      "name": "cr_calendar",
-      "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/cr_calendar-1.2.1",
-      "packageUri": "lib/",
-      "languageVersion": "3.0"
-    },
-    {
       "name": "cross_file",
       "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/cross_file-0.3.4+1",
       "packageUri": "lib/",
@@ -198,6 +192,12 @@
       "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/cupertino_icons-1.0.6",
       "packageUri": "lib/",
       "languageVersion": "2.19"
+    },
+    {
+      "name": "custom_date_range_picker",
+      "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/custom_date_range_picker-1.0.10",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "dart_style",
@@ -452,12 +452,6 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "jiffy",
-      "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/jiffy-6.2.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.19"
-    },
-    {
       "name": "js",
       "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/js-0.7.1",
       "packageUri": "lib/",
@@ -642,12 +636,6 @@
       "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/rxdart-0.27.7",
       "packageUri": "lib/",
       "languageVersion": "2.12"
-    },
-    {
-      "name": "scrollable_positioned_list",
-      "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/scrollable_positioned_list-0.3.8",
-      "packageUri": "lib/",
-      "languageVersion": "2.15"
     },
     {
       "name": "share_plus",
@@ -896,7 +884,7 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-04-17T15:44:05.398834Z",
+  "generated": "2024-04-18T16:59:53.004565Z",
   "generator": "pub",
   "generatorVersion": "3.3.0"
 }

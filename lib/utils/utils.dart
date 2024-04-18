@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:test_project/app/app_color.dart';
 import 'package:test_project/generated/locales.g.dart';
 
 class Utils {
+  static String ddmmyyyyFormat = 'dd-MM-yyyy';
+  static String yyyymmddFormat = 'yyyy-MM-dd';
+
   /// Show common snack bar messages
   static void showMessage(String title, String message,
       {snackPosition = SnackPosition.TOP}) {
@@ -114,4 +118,9 @@ class Utils {
     );
   }
 
+  static String getFormattedDate(String date, String outputFormat) {
+    DateTime inputDate = DateTime.parse(date);
+
+    return DateFormat(outputFormat).format(inputDate);
+  }
 }

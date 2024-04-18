@@ -1,4 +1,4 @@
-import 'package:cr_calendar/cr_calendar.dart';
+import 'package:custom_date_range_picker/custom_date_range_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -107,9 +107,10 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Obx(
-                                () => Text(controller.selectedDateRangeText.value,
+                              () => Text(controller.selectedDateRangeText.value,
                                   style: const TextStyle(
-                                      fontSize: 22, fontWeight: FontWeight.w600)),
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w600)),
                             ),
                           ).onTap(() {
                             _showDatePicker(Get.context!);
@@ -333,25 +334,19 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
 
   /// Show calendar in pop up dialog for selecting date range for calendar event.
   void _showDatePicker(BuildContext context) {
-    showCrDatePicker(
+    showCustomDateRangePicker(
       context,
-      properties: DatePickerProperties(
-        pickerMode: TouchMode.rangeSelection,
-        firstWeekDay: WeekDay.monday,
-        okButtonBuilder: (onPress) => ElevatedButton(
-          child: const Text('OK'),
-          onPressed: () {
-          },
-        ),
-        cancelButtonBuilder: (onPress) => OutlinedButton(
-          child: const Text('CANCEL'),
-          onPressed: () {},
-        ),
-        initialPickerDate: DateTime.now(),
-        onDateRangeSelected: (DateTime? rangeBegin, DateTime? rangeEnd) {
-          controller.selectedDateRangeText.value = '${rangeBegin} to ${rangeEnd}';
-        },
-      ),
+      dismissible: true,
+      minimumDate: DateTime.now().subtract(const Duration(days: 1000)),
+      maximumDate: DateTime.now(),
+      endDate: DateTime.now(),
+      backgroundColor: Colors.white,
+      primaryColor: AppColors.colorAppTheme,
+      onApplyClick: (start, end) {
+        controller.selectedDateRangeText.value =
+            '${Utils.getFormattedDate(start.toString(), Utils.ddmmyyyyFormat)} to ${Utils.getFormattedDate(end.toString(), Utils.ddmmyyyyFormat)}';
+      },
+      onCancelClick: () {},
     );
   }
 }
