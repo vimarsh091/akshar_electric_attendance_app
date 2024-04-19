@@ -47,8 +47,14 @@ class AdminHomePage extends GetView<AdminHomeController> {
                         padding: EdgeInsets.symmetric(
                             vertical: 6.h, horizontal: 20.w),
                         child: GestureDetector(
-                          onTap: () {
-                            Get.toNamed(AppRoutes.employeeDetailsPage,arguments: AppDataModel(userId: item.id));
+                          onTap: () async {
+                            var result = await Get.toNamed(
+                                AppRoutes.employeeDetailsPage,
+                                arguments: AppDataModel(userId: item.id));
+
+                            if (result != null) {
+                              controller.getUserList();
+                            }
                           },
                           child: Card(
                             elevation: 3,

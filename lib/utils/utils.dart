@@ -123,4 +123,14 @@ class Utils {
 
     return DateFormat(outputFormat).format(inputDate);
   }
+
+  static String convertTo12HourFormat(String time24) {
+    // Parse the time string to a DateTime object
+    DateTime time = DateFormat('HH:mm:ss').parse(time24);
+
+    // Format the DateTime object in 12-hour format
+    String time12 = DateFormat('h:mm a').format(time);
+
+    return time12;
+  }
 }

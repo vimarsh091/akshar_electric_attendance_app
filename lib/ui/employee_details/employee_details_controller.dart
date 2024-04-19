@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 import 'package:popup_menu/popup_menu.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:test_project/app/app_route.dart';
@@ -29,7 +28,11 @@ class EmployeeDetailsController extends GetxController
   RxBool isLoadingMore = false.obs;
   RxBool isAbleToLoadMore = false.obs;
   int pageIndex = 1;
-  RxString selectedDateRangeText = 'Select date range'.obs ;
+  RxString selectedDateRangeText = 'Select date range'.obs;
+  String startTime = '';
+  String endTime = '';
+  RxString totalWorkingHours = ''.obs;
+
   ScrollController scrollController = ScrollController();
   RxList<siteResponse.Data> siteList = <siteResponse.Data>[].obs;
 
@@ -74,7 +77,9 @@ class EmployeeDetailsController extends GetxController
         break;
 
       case 'Delete Profile':
-        {}
+        {
+          deleteUser();
+        }
         break;
     }
   }
@@ -87,6 +92,17 @@ class EmployeeDetailsController extends GetxController
     print('Menu is show');
   }
 
+  void deleteUser() {
+    isLoading.value = true;
+    Repository().deleteUser(id: appDataModel.userId).then((value) {
+      isLoading.value = false;
+      value?.fold((left) => Utils.showMessage(LocaleKeys.alert.tr, left),
+          (right) {
+        Get.back(result: true);
+      });
+    });
+  }
+
   void getUserDetails() {
     isLoading.value = true;
     Repository().getUserDetails(id: appDataModel.userId).then((value) {
@@ -94,6 +110,44 @@ class EmployeeDetailsController extends GetxController
       value?.fold((left) => Utils.showMessage(LocaleKeys.alert.tr, left),
           (right) {
         userDetails.value = right;
+      });
+    });
+  }
+
+  void getTotalWorkingHours() {
+    isLoading.value = true;
+    Repository()
+        .getTotalWorkingHoursData(
+            id: appDataModel.userId, startDate: startTime, endDate: endTime)
+        .then((value) {
+      isLoading.value = false;
+      value?.fold((left) => Utils.showMessage(LocaleKeys.alert.tr, left),
+          (right) {
+        totalWorkingHours.value = right.data?.totalHours ?? '0';
+      });
+    });
+  }
+
+  void updateSiteData(
+      {String? siteId,
+      String? siteName,
+      String? punchInTime,
+      String? punchOutTime}) {
+    isLoading.value = true;
+    Repository()
+        .updateSiteDetails(
+            id: appDataModel.userId,
+            punchInTime: punchInTime,
+            punchOutTime: punchOutTime,
+            siteId: siteId,
+            siteName: siteName)
+        .then((value) {
+      isLoading.value = false;
+      value?.fold((left) => Utils.showMessage(LocaleKeys.alert.tr, left),
+          (right) {
+        Get.back();
+        pageIndex == 1;
+        getUserSites();
       });
     });
   }

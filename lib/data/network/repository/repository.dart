@@ -5,13 +5,14 @@ import 'package:either_dart/either.dart';
 import 'package:http/http.dart' as http;
 import 'package:test_project/data/network/client/api_client.dart';
 import 'package:test_project/data/network/client/api_provider.dart';
-import 'package:test_project/data/network/models/login_response.dart';
-import 'package:test_project/data/network/models/user_detail_response.dart';
-import 'package:test_project/data/network/models/user_sites_response.dart';
 import 'package:test_project/data/network/models/add_user_response.dart';
 import 'package:test_project/data/network/models/common_response.dart';
 import 'package:test_project/data/network/models/get_me_response.dart';
+import 'package:test_project/data/network/models/get_total_working_hours_response.dart';
 import 'package:test_project/data/network/models/get_user_list.dart';
+import 'package:test_project/data/network/models/login_response.dart';
+import 'package:test_project/data/network/models/user_detail_response.dart';
+import 'package:test_project/data/network/models/user_sites_response.dart';
 
 import '../../../ui/data/storage_manager.dart';
 
@@ -64,15 +65,59 @@ class Repository extends ApiProvider {
     });
   }
 
+  Future<Either<String, CommonResponse>?> deleteUser(
+      {String? id}) async {
+    String url = ApiClient.userDetail;
+
+    url += '/$id';
+
+    var response = await deleteMethod(url);
+    return response?.fold((l) => Left(l), (r) {
+      var result = CommonResponse.fromJson(r);
+      return Right(result);
+    });
+  }
+
+  Future<Either<String, GetTotalWorkingHoursRespose>?> getTotalWorkingHoursData(
+      {String? id, String? startDate, String? endDate}) async {
+    String url = ApiClient.userDetail;
+
+    url += '/$id/sites/hours?fromDate=$startDate&toDate=$endDate';
+
+    var response = await getMethod(url);
+    return response?.fold((l) => Left(l), (r) {
+      var result = GetTotalWorkingHoursRespose.fromJson(r);
+      return Right(result);
+    });
+  }
+
   Future<Either<String, UserSitesResponse>?> getUserSites(
       {String? id, int? page}) async {
     String url = ApiClient.userDetail;
 
-    url += '/$id/sites?page=$page&limit=${2}';
+    url += '/$id/sites?page=$page&limit=${20}';
 
     var response = await getMethod(url);
     return response?.fold((l) => Left(l), (r) {
       var result = UserSitesResponse.fromJson(r);
+      return Right(result);
+    });
+  }
+
+  Future<Either<String, CommonResponse>?> updateSiteDetails(
+      {String? id,
+      String? siteId,
+      String? siteName,
+      String? punchInTime,
+      String? punchOutTime}) async {
+    String url = ApiClient.userDetail;
+
+    url +=
+        '/$id/sites/$siteId?siteName=$siteName&startTime=$punchInTime&endTime=$punchOutTime';
+
+    var response = await getMethod(url);
+    return response?.fold((l) => Left(l), (r) {
+      var result = CommonResponse.fromJson(r);
       return Right(result);
     });
   }

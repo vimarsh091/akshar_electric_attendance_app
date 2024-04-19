@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:popup_menu/popup_menu.dart';
 import 'package:test_project/app/app_color.dart';
 import 'package:test_project/data/network/client/api_client.dart';
+import 'package:test_project/data/network/models/user_sites_response.dart';
 import 'package:test_project/gen/assets.gen.dart';
 import 'package:test_project/ui/employee_details/employee_details_controller.dart';
 import 'package:test_project/ui/widgets/common_app_bar.dart';
@@ -75,7 +77,7 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
         () => controller.isLoading.isTrue
             ? Utils.commonProgressIndicator()
             : SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
+                physics: const ClampingScrollPhysics(),
                 controller: controller.scrollController,
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -103,18 +105,27 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
                         ),
                         12.verticalSpace,
                         Card(
-                          shape: RoundedRectangleBorder(),
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(12))),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Obx(
                               () => Text(controller.selectedDateRangeText.value,
                                   style: const TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w600)),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500)),
                             ),
                           ).onTap(() {
                             _showDatePicker(Get.context!);
                           }),
+                        ),
+                        Obx(
+                          () => Text(
+                            controller.totalWorkingHours.value,
+                            style: const TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.w700),
+                          ),
                         ),
                         20.verticalSpace,
                         Obx(
@@ -142,7 +153,7 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
                                             onPressed: (_) {
                                               controller.slidableController
                                                   .close();
-                                              showEditDetailsSheet();
+                                              showEditDetailsSheet(item);
                                             },
                                             backgroundColor:
                                                 AppColors.colorAppTheme,
@@ -187,10 +198,10 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
                                                         'Site name :- ${item.siteName}'),
                                                     4.verticalSpace,
                                                     Text(
-                                                        'Check in :- ${item.checkIn}'),
+                                                        'Check in :- ${Utils.convertTo12HourFormat(item.checkIn ?? '')}'),
                                                     4.verticalSpace,
                                                     Text(
-                                                        'Check out :- ${item.checkOut}'),
+                                                        'Check out :- ${Utils.convertTo12HourFormat(item.checkOut ?? '')}'),
                                                     4.verticalSpace,
                                                     Text(
                                                         'Total time :- ${item.totalTime}'),
@@ -214,16 +225,20 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
                                     if (index ==
                                             controller.siteList.length - 1 &&
                                         controller.isAbleToLoadMore.isTrue)
-                                      SizedBox(
-                                        width: 30,
-                                        height: 30,
-                                        child: Obx(() => Visibility(
-                                            visible:
-                                                controller.isLoadingMore.value,
-                                            child:
-                                                const CircularProgressIndicator(
-                                              color: AppColors.colorAppTheme,
-                                            ))),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 12.h),
+                                        child: SizedBox(
+                                          width: 30,
+                                          height: 30,
+                                          child: Obx(() => controller
+                                                  .isLoadingMore.isTrue
+                                              ? const CircularProgressIndicator(
+                                                  color:
+                                                      AppColors.colorAppTheme,
+                                                )
+                                              : Offstage()),
+                                        ),
                                       )
                                   ],
                                 ),
@@ -240,7 +255,12 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
     );
   }
 
-  Future showEditDetailsSheet() {
+  Future showEditDetailsSheet(Data item) {
+    controller.punchInController.text =
+        Utils.convertTo12HourFormat(item.checkIn ?? '');
+    controller.punchOutController.text =
+        Utils.convertTo12HourFormat(item.checkOut ?? '');
+    controller.siteNameController.text = item.siteName ?? '';
     return Get.bottomSheet(
         enableDrag: true,
         elevation: 3,
@@ -264,26 +284,62 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
                     fontWeight: FontWeight.bold),
               ),
               20.verticalSpace,
-              TextField(
-                controller: controller.punchInController,
-                decoration: InputDecoration(
-                    hintText: 'Enter punch in time',
-                    labelText: 'Enter punch in time',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            const BorderSide(color: AppColors.colorAppTheme))),
+              GestureDetector(
+                onTap: () async {
+                  var punchInTime = await showTimePicker(
+                    context: Get.context!,
+                    initialTime: TimeOfDay.now(),
+                  );
+
+                  if (punchInTime != null) {
+                    controller.punchInController.text =
+                        punchInTime.format(Get.context!);
+                  }
+                },
+                child: TextField(
+                  enabled: false,
+                  controller: controller.punchInController,
+                  decoration: InputDecoration(
+                      hintText: 'Enter punch in time',
+                      labelText: 'Enter punch in time',
+                      disabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide:
+                              const BorderSide(color: AppColors.colorAppTheme)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                              color: AppColors.colorAppTheme))),
+                ),
               ),
               20.verticalSpace,
-              TextField(
-                controller: controller.punchOutController,
-                decoration: InputDecoration(
-                    hintText: 'Enter punch out time',
-                    labelText: 'Enter punch out time',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            const BorderSide(color: AppColors.colorAppTheme))),
+              GestureDetector(
+                onTap: () async {
+                  var punchOutTime = await showTimePicker(
+                    context: Get.context!,
+                    initialTime: TimeOfDay.now(),
+                  );
+
+                  if (punchOutTime != null) {
+                    controller.punchOutController.text =
+                        punchOutTime.format(Get.context!);
+                  }
+                },
+                child: TextField(
+                  enabled: false,
+                  controller: controller.punchOutController,
+                  decoration: InputDecoration(
+                      hintText: 'Enter punch out time',
+                      labelText: 'Enter punch out time',
+                      disabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide:
+                              const BorderSide(color: AppColors.colorAppTheme)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                              color: AppColors.colorAppTheme))),
+                ),
               ),
               20.verticalSpace,
               TextField(
@@ -299,18 +355,30 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
               40.verticalSpace,
               GestureDetector(
                 onTap: () {
+                  var punchIn = DateFormat('hh:mm a')
+                      .parse(controller.punchInController.text.trim());
+                  var punchOut = DateFormat('hh:mm a')
+                      .parse(controller.punchOutController.text.trim());
+
                   if (controller.punchInController.text.trim().isEmpty) {
                     Utils.showMessage('Error', 'Please enter punch in time');
                   } else if (controller.punchOutController.text
                       .trim()
                       .isEmpty) {
                     Utils.showMessage('Error', 'Please enter punch out time');
+                  } else if (punchOut.isBefore(punchIn)) {
+                    Utils.showMessage('Error',
+                        'Punch out time should be after punch in time.');
                   } else if (controller.siteNameController.text
                       .trim()
                       .isEmpty) {
                     Utils.showMessage('Error', 'Please enter site name');
                   } else {
-                    Get.back();
+                    controller.updateSiteData(
+                        siteName: controller.siteNameController.text.trim(),
+                        siteId: item.id,
+                        punchOutTime: DateFormat('HH:mm:ss').format(punchIn),
+                        punchInTime: DateFormat('HH:mm:ss').format(punchOut));
                   }
                 },
                 child: Container(
@@ -343,8 +411,13 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
       backgroundColor: Colors.white,
       primaryColor: AppColors.colorAppTheme,
       onApplyClick: (start, end) {
+        controller.startTime =
+            Utils.getFormattedDate(start.toString(), Utils.yyyymmddFormat);
+        controller.endTime =
+            Utils.getFormattedDate(end.toString(), Utils.yyyymmddFormat);
         controller.selectedDateRangeText.value =
             '${Utils.getFormattedDate(start.toString(), Utils.ddmmyyyyFormat)} to ${Utils.getFormattedDate(end.toString(), Utils.ddmmyyyyFormat)}';
+        controller.getTotalWorkingHours();
       },
       onCancelClick: () {},
     );

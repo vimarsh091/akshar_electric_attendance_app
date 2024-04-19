@@ -18,10 +18,7 @@ abstract class IApiProvider {
     String? headerLangCode,
   });
 
-  Future<Either<String, dynamic>?> putMethod<T>(
-    String url, {
-    String? headerLangCode,
-  });
+  Future<Either<String, dynamic>?> putMethod<T>(String url);
 
   Future<Either<String, dynamic>?> postMethod<T>(
     String url,
@@ -32,7 +29,6 @@ abstract class IApiProvider {
 
   Future<Either<String, dynamic>?> deleteMethod<T>(
     String url,
-    String? headerLangCode,
   );
 
   Future<Either<String, dynamic>?> patchMethod<T>(
@@ -142,17 +138,14 @@ class ApiProvider extends GetConnect implements IApiProvider {
   }
 
   @override
-  Future<Either<String, dynamic>?> deleteMethod<T>(
-      String url, String? headerLangCode) async {
+  Future<Either<String, dynamic>?> deleteMethod<T>(String url) async {
     try {
       if (await ConnectivityManager().checkInternet()) {
         String? token = StorageManager().getAuthToken();
 
         var result = await delete(ApiClient.apiBaseUrl + url, headers: {
-          'Accept': 'application/json',
-          if (headerLangCode != null) ...{
-            'Accept-Language': headerLangCode,
-          },
+          'accept': '*/*',
+          'Content-Type': 'application/json',
           if (token != null) ...{
             'Authorization': 'Bearer $token',
           }
@@ -211,17 +204,14 @@ class ApiProvider extends GetConnect implements IApiProvider {
   }
 
   @override
-  Future<Either<String, dynamic>?> putMethod<T>(String url,
-      {String? headerLangCode}) async {
+  Future<Either<String, dynamic>?> putMethod<T>(String url) async {
     try {
       if (await ConnectivityManager().checkInternet()) {
         String? token = StorageManager().getAuthToken();
 
         var result = await get(ApiClient.apiBaseUrl + url, headers: {
-          'Accept': 'application/json',
-          if (headerLangCode != null) ...{
-            'Accept-Language': headerLangCode,
-          },
+          'accept': '*/*',
+          'Content-Type': 'application/json',
           if (token != null) ...{
             'Authorization': 'Bearer $token',
           }
