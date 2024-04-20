@@ -37,7 +37,7 @@ class AdminHomePage extends GetView<AdminHomeController> {
             ? Utils.commonProgressIndicator()
             : controller.userList.isEmpty
                 ? Center(
-                    child: Text(LocaleKeys.noDataFound.tr),
+                    child: Text(LocaleKeys.noDataFound.tr,style: const TextStyle(fontSize: 22),),
                   )
                 : ListView.builder(
                     physics: const BouncingScrollPhysics(),

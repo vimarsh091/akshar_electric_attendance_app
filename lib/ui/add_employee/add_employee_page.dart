@@ -22,7 +22,9 @@ class AddEmployeePage extends GetView<AddEmployeeController> {
             onLeadingTap: () {
               Get.back();
             },
-            title: controller.isEditProfile.isTrue?'Edit Employee Profile':'Add Employee Profile'),
+            title: controller.isEditProfile.isTrue
+                ? 'Edit Employee Profile'
+                : 'Add Employee Profile'),
       ),
       backgroundColor: Colors.white,
       body: Padding(
@@ -148,7 +150,9 @@ class AddEmployeePage extends GetView<AddEmployeeController> {
                           Utils.showMessage(
                               'Error', 'Please select profile photo');
                         } else {
-                          controller.addUser();
+                          controller.isEditProfile.isTrue
+                              ? controller.updateUser()
+                              : controller.addUser();
                         }
                       },
                       child: Container(
@@ -159,7 +163,9 @@ class AddEmployeePage extends GetView<AddEmployeeController> {
                             color: AppColors.colorAppTheme),
                         child: Text(
                           textAlign: TextAlign.center,
-                          controller.isEditProfile.isTrue?'Edit Employee Profile':'Add Employee Profile',
+                          controller.isEditProfile.isTrue
+                              ? 'Edit Employee Profile'
+                              : 'Add Employee Profile',
                           style: TextStyle(color: Colors.white, fontSize: 14),
                         ),
                       ),

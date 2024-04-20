@@ -2,17 +2,23 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:either_dart/either.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:test_project/data/network/client/api_client.dart';
 import 'package:test_project/data/network/client/api_provider.dart';
 import 'package:test_project/data/network/models/add_user_response.dart';
+import 'package:test_project/data/network/models/check_in_response.dart';
+import 'package:test_project/data/network/models/check_out_response.dart';
 import 'package:test_project/data/network/models/common_response.dart';
 import 'package:test_project/data/network/models/get_me_response.dart';
 import 'package:test_project/data/network/models/get_total_working_hours_response.dart';
 import 'package:test_project/data/network/models/get_user_list.dart';
 import 'package:test_project/data/network/models/login_response.dart';
+import 'package:test_project/data/network/models/site_status_response.dart';
 import 'package:test_project/data/network/models/user_detail_response.dart';
 import 'package:test_project/data/network/models/user_sites_response.dart';
+import 'package:test_project/generated/locales.g.dart';
 
 import '../../../ui/data/storage_manager.dart';
 
@@ -34,6 +40,22 @@ class Repository extends ApiProvider {
     return response?.fold((l) => Left(l), (r) {
       var getMeResponse = GetMeResponse.fromJson(r);
       return Right(getMeResponse);
+    });
+  }
+
+  Future<Either<String, CheckOutResponse>?> checkOut() async {
+    var response = await putMethod(ApiClient.checkOut);
+    return response?.fold((l) => Left(l), (r) {
+      var result = CheckOutResponse.fromJson(r);
+      return Right(result);
+    });
+  }
+
+  Future<Either<String, SiteStatusResponse>?> getSiteStatus() async {
+    var response = await getMethod(ApiClient.getStatus);
+    return response?.fold((l) => Left(l), (r) {
+      var result = SiteStatusResponse.fromJson(r);
+      return Right(result);
     });
   }
 
@@ -65,8 +87,7 @@ class Repository extends ApiProvider {
     });
   }
 
-  Future<Either<String, CommonResponse>?> deleteUser(
-      {String? id}) async {
+  Future<Either<String, CommonResponse>?> deleteUser({String? id}) async {
     String url = ApiClient.userDetail;
 
     url += '/$id';
@@ -125,7 +146,6 @@ class Repository extends ApiProvider {
   Future<Either<String, AddUserResponse>?> addUser(
       {String? firstName,
       String? lastName,
-      String? email,
       String? mobileNumber,
       File? image}) async {
     try {
@@ -145,7 +165,6 @@ class Repository extends ApiProvider {
 
       request.fields['firstName'] = firstName!;
       request.fields['lastName'] = lastName!;
-      request.fields['email'] = email!;
       request.fields['phone'] = mobileNumber!;
 
       // Add headers
@@ -167,7 +186,100 @@ class Repository extends ApiProvider {
         return Left(commonResponse.message ?? '');
       }
     } catch (e) {
-      return Left('Spmething went wrong');
+      return Left(LocaleKeys.somethingWentWrong.tr);
+    }
+  }
+
+  Future<Either<String, CheckInResponse>?> checkIn(
+      {String? siteName, File? image}) async {
+    try {
+      // Create a multipart request
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('${ApiClient.apiBaseUrl}${ApiClient.checkIn}'),
+      );
+
+      // Add image file to multipart
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'siteImage',
+          image!.path,
+        ),
+      );
+
+      request.fields['siteName'] = siteName!;
+
+      // Add headers
+      request.headers['accept'] = '*/*';
+      request.headers['authorization'] = StorageManager().getAuthToken() ?? '';
+      request.headers['Content-Type'] = 'multipart/form-data';
+
+      // Send request
+      final streamedResponse = await request.send();
+
+      // Get response
+      final response = await http.Response.fromStream(streamedResponse);
+
+      var commonResponse = CommonResponse.fromJson(jsonDecode(response.body));
+
+      if (commonResponse.isError == false) {
+        return Right(CheckInResponse.fromJson(jsonDecode(response.body)));
+      } else {
+        return Left(commonResponse.message ?? '');
+      }
+    } catch (e) {
+      return Left(LocaleKeys.somethingWentWrong.tr);
+    }
+  }
+
+  Future<Either<String, CommonResponse>?> updateUserDetails(
+      {String? id,
+      String? firstName,
+      String? lastName,
+      String? mobileNumber,
+      File? image}) async {
+    try {
+      // Create a multipart request
+      var request = http.MultipartRequest(
+        'PUT',
+        Uri.parse('${ApiClient.apiBaseUrl}${ApiClient.userDetail}/$id'),
+      );
+
+      // Add image file to multipart
+      if (image != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'avatar',
+            image.path,
+          ),
+        );
+      }
+
+      request.fields['firstName'] = firstName!;
+      request.fields['lastName'] = lastName!;
+      request.fields['phone'] = mobileNumber!;
+
+      // Add headers
+      request.headers['accept'] = '*/*';
+      request.headers['authorization'] = StorageManager().getAuthToken() ?? '';
+      request.headers['Content-Type'] = 'multipart/form-data';
+
+      debugPrint(request.toString());
+      // Send request
+      final streamedResponse = await request.send();
+
+      // Get response
+      final response = await http.Response.fromStream(streamedResponse);
+
+      var commonResponse = CommonResponse.fromJson(jsonDecode(response.body));
+
+      if (commonResponse.isError == false) {
+        return Right(commonResponse);
+      } else {
+        return Left(commonResponse.message ?? '');
+      }
+    } catch (e) {
+      return Left(LocaleKeys.somethingWentWrong.tr);
     }
   }
 }

@@ -24,6 +24,11 @@ class StorageManager {
 
   String? getPunchInTime() {
     return box.read(StorageManager.todayPunchInTime);
+
+  }
+
+  void removePunchInTime(){
+    box.remove(StorageManager.todayPunchInTime);
   }
 
   String? getAuthToken() {

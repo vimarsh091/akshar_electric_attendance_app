@@ -15,7 +15,7 @@ abstract class IApiProvider {
   Future<Either<String, dynamic>?> getMethod<T>(
     String url, {
     Map<String, dynamic>? query,
-    String? headerLangCode,
+
   });
 
   Future<Either<String, dynamic>?> putMethod<T>(String url);
@@ -50,7 +50,7 @@ class ApiProvider extends GetConnect implements IApiProvider {
   Future<Either<String, dynamic>?> getMethod<T>(
     String url, {
     Map<String, dynamic>? query,
-    String? headerLangCode,
+
   }) async {
     try {
       if (await ConnectivityManager().checkInternet()) {
@@ -58,10 +58,9 @@ class ApiProvider extends GetConnect implements IApiProvider {
 
         var result =
             await get(ApiClient.apiBaseUrl + url, query: query, headers: {
-          'Accept': 'application/json',
-          if (headerLangCode != null) ...{
-            'Accept-Language': headerLangCode,
-          },
+              'accept': '*/*',
+              'Content-Type': 'application/json',
+
           if (token != null) ...{
             'Authorization': 'Bearer $token',
           }
@@ -209,26 +208,41 @@ class ApiProvider extends GetConnect implements IApiProvider {
       if (await ConnectivityManager().checkInternet()) {
         String? token = StorageManager().getAuthToken();
 
-        var result = await get(ApiClient.apiBaseUrl + url, headers: {
+        var headers = {
           'accept': '*/*',
           'Content-Type': 'application/json',
-          if (token != null) ...{
-            'Authorization': 'Bearer $token',
-          }
-        });
-        // Print response body and status code
-        debugPrint('Responsebody :- ${result.body}');
+        };
+
+        // Add token to headers if available
+        if (token != null) {
+          headers['Authorization'] = 'Bearer $token';
+        }
+
+        var result =  await put(
+          ApiClient.apiBaseUrl + url,
+          headers: headers,
+        );
+
+        // Print response body and status code for debugging
+        debugPrint('Response Body: ${result.body}');
+        debugPrint('Status Code: ${result.statusCode}');
+
+        // Parse JSON response body
         var commonResponse = CommonResponse<T>.fromJson(result.body);
 
         if (commonResponse.isError == false) {
+          // Successful response
           return Right(result.body);
         } else {
+          // Error response
           return Left(commonResponse.message ?? '');
         }
       } else {
+        // No internet connection
         return Left(LocaleKeys.checkYourInternetConnection.tr);
       }
     } catch (e, s) {
+      // Catch and handle exceptions
       debugPrint('$e \n $s');
       return Left(LocaleKeys.somethingWentWrong.tr);
     }

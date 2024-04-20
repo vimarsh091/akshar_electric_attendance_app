@@ -50,9 +50,30 @@ class AddEmployeeController extends GetxController {
     isLoading.value = true;
     Repository()
         .addUser(
-      email: 'test09@gmail.com',
       firstName: firstNameController.text.trim(),
       image: File(profilePhoto.value),
+      lastName: lastNameController.text.trim(),
+      mobileNumber: '+91${mobileNumberController.text.trim()}',
+    )
+        .then((value) {
+      isLoading.value = false;
+      value?.fold((left) => Utils.showMessage(LocaleKeys.error.tr, left),
+          (right) {
+        Get.back(result: true);
+        Utils.showMessage(LocaleKeys.success.tr, right.message ?? '');
+      });
+    });
+  }
+
+  void updateUser() {
+    isLoading.value = true;
+    Repository()
+        .updateUserDetails(
+      id: appDataModel.userId,
+      firstName: firstNameController.text.trim(),
+      image: !profilePhoto.value.startsWith('http')
+          ? File(profilePhoto.value)
+          : null,
       lastName: lastNameController.text.trim(),
       mobileNumber: '+91${mobileNumberController.text.trim()}',
     )

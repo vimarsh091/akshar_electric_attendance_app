@@ -46,13 +46,13 @@ class Data {
 class User {
   String? createdAt;
   String? updatedAt;
-  Null? deletedAt;
+  String? deletedAt;
   String? id;
   String? firstName;
-  Null? lastName;
-  Null? avatar;
+  String? lastName;
+  String? avatar;
   String? email;
-  Null? phone;
+  String? phone;
   bool? isAdmin;
 
   User(

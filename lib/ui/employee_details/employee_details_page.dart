@@ -20,237 +20,247 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size(Get.width, 36.h),
-        child: CommonAppBar(
-          showLeading: true,
-          onLeadingTap: () {
-            Get.back();
-          },
-          popupKey: controller.popUpKey,
-          title: 'Employee profile',
-          onSufixTap: () {
-            PopupMenu(
-                    context: context,
-                    config: MenuConfig.forList(
-                        backgroundColor: AppColors.colorAppTheme,
-                        arrowHeight: 16,
-                        itemWidth: 120.w,
-                        lineColor: Colors.red),
-                    items: [
-                      MenuItem.forList(
-                          textStyle: const TextStyle(
-                              fontSize: 12, color: Colors.white),
-                          title: 'Edit Profile',
-                          image: const Icon(Icons.mode_edit_rounded,
-                              color: Colors.white, size: 20)),
-                      MenuItem.forList(
-                          textStyle: const TextStyle(
-                              fontSize: 12, color: Colors.white),
-                          title: 'Call Now',
-                          image: const Icon(Icons.call_rounded,
-                              color: Colors.white, size: 20)),
-                      MenuItem.forList(
-                          textStyle: const TextStyle(
-                              fontSize: 12, color: Colors.white),
-                          title: 'Share Password',
-                          image: const Icon(Icons.password_rounded,
-                              color: Colors.white, size: 20)),
-                      MenuItem.forList(
-                          textStyle:
-                              const TextStyle(color: Colors.red, fontSize: 12),
-                          title: 'Delete Profile',
-                          image: const Icon(Icons.delete_rounded,
-                              color: Colors.red, size: 20)),
-                    ],
-                    onClickMenu: controller.onClickMenu,
-                    onShow: controller.onShow,
-                    onDismiss: controller.onDismiss)
-                .show(widgetKey: controller.popUpKey);
-          },
-          showSufixIcon: true,
+    return WillPopScope(
+      onWillPop: () {
+        Get.back(result: true);
+        return Future(() => true);
+      },
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size(Get.width, 36.h),
+          child: CommonAppBar(
+            showLeading: true,
+            onLeadingTap: () {
+              Get.back(result: true);
+            },
+            popupKey: controller.popUpKey,
+            title: 'Employee profile',
+            onSufixTap: () {
+              PopupMenu(
+                      context: context,
+                      config: MenuConfig.forList(
+                          backgroundColor: AppColors.colorAppTheme,
+                          arrowHeight: 16,
+                          itemWidth: 120.w,
+                          lineColor: Colors.red),
+                      items: [
+                        MenuItem.forList(
+                            textStyle: const TextStyle(
+                                fontSize: 12, color: Colors.white),
+                            title: 'Edit Profile',
+                            image: const Icon(Icons.mode_edit_rounded,
+                                color: Colors.white, size: 20)),
+                        MenuItem.forList(
+                            textStyle: const TextStyle(
+                                fontSize: 12, color: Colors.white),
+                            title: 'Call Now',
+                            image: const Icon(Icons.call_rounded,
+                                color: Colors.white, size: 20)),
+                        MenuItem.forList(
+                            textStyle: const TextStyle(
+                                fontSize: 12, color: Colors.white),
+                            title: 'Share Password',
+                            image: const Icon(Icons.password_rounded,
+                                color: Colors.white, size: 20)),
+                        MenuItem.forList(
+                            textStyle: const TextStyle(
+                                color: Colors.red, fontSize: 12),
+                            title: 'Delete Profile',
+                            image: const Icon(Icons.delete_rounded,
+                                color: Colors.red, size: 20)),
+                      ],
+                      onClickMenu: controller.onClickMenu,
+                      onShow: controller.onShow,
+                      onDismiss: controller.onDismiss)
+                  .show(widgetKey: controller.popUpKey);
+            },
+            showSufixIcon: true,
+          ),
         ),
-      ),
-      backgroundColor: Colors.white,
-      body: Obx(
-        () => controller.isLoading.isTrue
-            ? Utils.commonProgressIndicator()
-            : SingleChildScrollView(
-                physics: const ClampingScrollPhysics(),
-                controller: controller.scrollController,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Obx(
-                    () => Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        26.verticalSpace,
-                        CommonAppImage(
-                          imagePath: controller
-                                      .userDetails.value?.data?.avatar !=
-                                  null
-                              ? '${ApiClient.apiBaseUrl}${controller.userDetails.value?.data?.avatar ?? ''}'
-                              : Assets.images.icAvatar.path,
-                          height: 120.w,
-                          width: 120.w,
-                          fit: BoxFit.cover,
-                          radius: 100,
-                        ),
-                        12.verticalSpace,
-                        Text(
-                          '${controller.userDetails.value?.data?.firstName ?? ''} ${controller.userDetails.value?.data?.lastName ?? ''}',
-                          style: const TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.w700),
-                        ),
-                        12.verticalSpace,
-                        Card(
-                          shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12))),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Obx(
-                              () => Text(controller.selectedDateRangeText.value,
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500)),
-                            ),
-                          ).onTap(() {
-                            _showDatePicker(Get.context!);
-                          }),
-                        ),
-                        Obx(
-                          () => Text(
-                            controller.totalWorkingHours.value,
+        backgroundColor: Colors.white,
+        body: Obx(
+          () => controller.isLoading.isTrue
+              ? Utils.commonProgressIndicator()
+              : SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
+                  controller: controller.scrollController,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: Obx(
+                      () => Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          26.verticalSpace,
+                          CommonAppImage(
+                            imagePath: controller
+                                        .userDetails.value?.data?.avatar !=
+                                    null
+                                ? '${ApiClient.apiBaseUrl}${controller.userDetails.value?.data?.avatar ?? ''}'
+                                : Assets.images.icAvatar.path,
+                            height: 120.w,
+                            width: 120.w,
+                            fit: BoxFit.cover,
+                            radius: 100,
+                          ),
+                          12.verticalSpace,
+                          Text(
+                            '${controller.userDetails.value?.data?.firstName ?? ''} ${controller.userDetails.value?.data?.lastName ?? ''}',
                             style: const TextStyle(
                                 fontSize: 22, fontWeight: FontWeight.w700),
                           ),
-                        ),
-                        20.verticalSpace,
-                        Obx(
-                          () => ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: controller.siteList.length,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              var item = controller.siteList[index];
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Slidable(
-                                      // Specify a key if the Slidable is dismissible.
-                                      key: const ValueKey(0),
-                                      endActionPane: ActionPane(
-                                        motion: const BehindMotion(),
-                                        openThreshold: 0.3,
-                                        closeThreshold: 0.3,
-                                        dragDismissible: true,
-                                        extentRatio: 0.3,
-                                        children: [
-                                          SlidableAction(
-                                            onPressed: (_) {
-                                              controller.slidableController
-                                                  .close();
-                                              showEditDetailsSheet(item);
-                                            },
-                                            backgroundColor:
-                                                AppColors.colorAppTheme,
-                                            foregroundColor: Colors.white,
-                                            icon: Icons.edit,
-                                            label: 'Edit',
-                                            autoClose: true,
-                                            borderRadius:
-                                                BorderRadius.circular(22),
-                                          ),
-                                        ],
-                                      ),
-
-                                      // The child of the Slidable is what the user sees when the
-                                      // component is not dragged.
-                                      child: Card(
-                                        elevation: 3,
-                                        shadowColor: AppColors.colorAppTheme,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            side: const BorderSide(
-                                                color: AppColors.colorAppTheme,
-                                                width: 0.5)),
-                                        child: Padding(
-                                          padding: EdgeInsets.all(12.w),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                        'Date :- ${item.date}'),
-                                                    4.verticalSpace,
-                                                    Text(
-                                                        'Site name :- ${item.siteName}'),
-                                                    4.verticalSpace,
-                                                    Text(
-                                                        'Check in :- ${Utils.convertTo12HourFormat(item.checkIn ?? '')}'),
-                                                    4.verticalSpace,
-                                                    Text(
-                                                        'Check out :- ${Utils.convertTo12HourFormat(item.checkOut ?? '')}'),
-                                                    4.verticalSpace,
-                                                    Text(
-                                                        'Total time :- ${item.totalTime}'),
-                                                  ],
-                                                ),
-                                              ),
-                                              12.horizontalSpace,
-                                              CommonAppImage(
-                                                imagePath:
-                                                    '${ApiClient.apiBaseUrl}${item.siteImage}',
-                                                height: 95.w,
-                                                width: 95.w,
-                                                radius: 22,
-                                                fit: BoxFit.cover,
-                                              )
-                                            ],
-                                          ),
+                          12.verticalSpace,
+                          Card(
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12))),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Obx(
+                                () => Text(
+                                    controller.selectedDateRangeText.value,
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500)),
+                              ),
+                            ).onTap(() {
+                              _showDatePicker(Get.context!);
+                            }),
+                          ),
+                          Obx(
+                            () => Text(
+                              controller.totalWorkingHours.value,
+                              style: const TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.w700),
+                            ),
+                          ),
+                          20.verticalSpace,
+                          Obx(
+                            () => ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: controller.siteList.length,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                var item = controller.siteList[index];
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      Slidable(
+                                        // Specify a key if the Slidable is dismissible.
+                                        key: const ValueKey(0),
+                                        endActionPane: ActionPane(
+                                          motion: const BehindMotion(),
+                                          openThreshold: 0.3,
+                                          closeThreshold: 0.3,
+                                          dragDismissible: true,
+                                          extentRatio: 0.3,
+                                          children: [
+                                            SlidableAction(
+                                              onPressed: (_) {
+                                                controller.slidableController
+                                                    .close();
+                                                showEditDetailsSheet(item);
+                                              },
+                                              backgroundColor:
+                                                  AppColors.colorAppTheme,
+                                              foregroundColor: Colors.white,
+                                              icon: Icons.edit,
+                                              label: 'Edit',
+                                              autoClose: true,
+                                              borderRadius:
+                                                  BorderRadius.circular(22),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                    ),
-                                    if (index ==
-                                            controller.siteList.length - 1 &&
-                                        controller.isAbleToLoadMore.isTrue)
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 12.h),
-                                        child: SizedBox(
-                                          width: 30,
-                                          height: 30,
-                                          child: Obx(() => controller
-                                                  .isLoadingMore.isTrue
-                                              ? const CircularProgressIndicator(
+
+                                        // The child of the Slidable is what the user sees when the
+                                        // component is not dragged.
+                                        child: Card(
+                                          elevation: 3,
+                                          shadowColor: AppColors.colorAppTheme,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              side: const BorderSide(
                                                   color:
                                                       AppColors.colorAppTheme,
+                                                  width: 0.5)),
+                                          child: Padding(
+                                            padding: EdgeInsets.all(12.w),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                          'Date :- ${item.date}'),
+                                                      4.verticalSpace,
+                                                      Text(
+                                                          'Site name :- ${item.siteName}'),
+                                                      4.verticalSpace,
+                                                      Text(
+                                                          'Check in :- ${Utils.convertTo12HourFormat(item.checkIn ?? '')}'),
+                                                      4.verticalSpace,
+                                                      Text(
+                                                          'Check out :- ${Utils.convertTo12HourFormat(item.checkOut ?? '')}'),
+                                                      4.verticalSpace,
+                                                      Text(
+                                                          'Total time :- ${item.totalTime}'),
+                                                    ],
+                                                  ),
+                                                ),
+                                                12.horizontalSpace,
+                                                CommonAppImage(
+                                                  imagePath:
+                                                      '${ApiClient.apiBaseUrl}${item.siteImage}',
+                                                  height: 95.w,
+                                                  width: 95.w,
+                                                  radius: 22,
+                                                  fit: BoxFit.cover,
                                                 )
-                                              : Offstage()),
+                                              ],
+                                            ),
+                                          ),
                                         ),
-                                      )
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        )
-                      ],
+                                      ),
+                                      if (index ==
+                                              controller.siteList.length - 1 &&
+                                          controller.isAbleToLoadMore.isTrue)
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 12.h),
+                                          child: SizedBox(
+                                            width: 30,
+                                            height: 30,
+                                            child: Obx(() => controller
+                                                    .isLoadingMore.isTrue
+                                                ? const CircularProgressIndicator(
+                                                    color:
+                                                        AppColors.colorAppTheme,
+                                                  )
+                                                : Offstage()),
+                                          ),
+                                        )
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+        ),
       ),
     );
   }

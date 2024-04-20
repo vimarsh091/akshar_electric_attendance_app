@@ -79,6 +79,8 @@ class LocaleKeys {
   static const resetPassword = 'resetPassword';
   static const enterCodeAndNewPassword = 'enterCodeAndNewPassword';
   static const reset = 'reset';
+  static const checkIn = 'checkIn';
+  static const checkOut = 'checkOut';
   static const privacyPolicy = 'privacyPolicy';
   static const termsAndConditions = 'termsAndConditions';
   static const aboutUs = 'aboutUs';
@@ -162,6 +164,8 @@ class Locales {
     'enterCodeAndNewPassword':
         'Enter the code that you received on your Email & set New password',
     'reset': 'Reset',
+    'checkIn': 'Check In',
+    'checkOut': 'Check Out',
     'privacyPolicy': 'Privacy Policy',
     'termsAndConditions': 'Terms & Conditions',
     'aboutUs': 'About Us',

@@ -1,11 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:test_project/app/app_color.dart';
 import 'package:test_project/data/network/client/api_client.dart';
-import 'package:test_project/gen/assets.gen.dart';
-import 'package:test_project/ui/data/storage_manager.dart';
+import 'package:test_project/generated/locales.g.dart';
 import 'package:test_project/ui/employee/employee_home_controller.dart';
 import 'package:test_project/ui/widgets/common_app_bar.dart';
 import 'package:test_project/ui/widgets/common_app_image.dart';
@@ -44,35 +45,135 @@ class EmployeeHomePage extends GetView<EmployeeHomeController> {
                         child: SingleChildScrollView(
                           child: Column(
                             children: [
-                              CommonAppImage(
-                                imagePath: ApiClient.apiBaseUrl,
-                                height: 90.w,
-                                width: 90.w,
-                                radius: 50,
-                                fit: BoxFit.cover,
+                              20.verticalSpace,
+                              Obx(
+                                () =>
+                                    controller.getMeData.value?.data?.avatar !=
+                                            null
+                                        ? CommonAppImage(
+                                            imagePath:
+                                                '${ApiClient.apiBaseUrl}${controller.getMeData.value?.data?.avatar}',
+                                            height: 100.w,
+                                            width: 100.w,
+                                            radius: 50,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Offstage(),
                               ),
                               /* Image.file(controller.imageValue.value);*/
                               20.verticalSpace,
-                              Text(
-                                'Welcome user name',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w500),
-                              ),
-                              20.verticalSpace,
                               Obx(
+                                () => Text(
+                                  'Welcome ${controller.getMeData.value?.data?.firstName} ${controller.getMeData.value?.data?.lastName}',
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                              60.verticalSpace,
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: AppColors.colorAppTheme
+                                            .withAlpha(40)),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(18),
+                                      child: Obx(
+                                        () => Text(
+                                          '${controller.elapsedTime.value.inHours.toString().length == 1 ? '0${controller.elapsedTime.value.inHours}' : controller.elapsedTime.value.inHours}',
+                                          style: const TextStyle(
+                                              fontSize: 48,
+                                              color: AppColors.colorBlack,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  4.horizontalSpace,
+                                  const Text(
+                                    ':',
+                                    style: TextStyle(
+                                        fontSize: 52,
+                                        color: AppColors.colorBlack,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  4.horizontalSpace,
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: AppColors.colorAppTheme
+                                            .withAlpha(40)),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(18),
+                                      child: Obx(
+                                        () => Text(
+                                          (controller.elapsedTime.value
+                                                      .inMinutes %
+                                                  60)
+                                              .toString()
+                                              .padLeft(2, '0'),
+                                          style: const TextStyle(
+                                              fontSize: 48,
+                                              color: AppColors.colorBlack,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  4.horizontalSpace,
+                                  const Text(
+                                    ':',
+                                    style: TextStyle(
+                                        fontSize: 52,
+                                        color: AppColors.colorBlack,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  4.horizontalSpace,
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: AppColors.colorAppTheme
+                                            .withAlpha(40)),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(18),
+                                      child: Obx(
+                                        () => Text(
+                                          (controller.elapsedTime.value.inSeconds % 60).toString().padLeft(2, '0'),
+                                          style: const TextStyle(
+                                              fontSize: 48,
+                                              color: AppColors.colorBlack,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+
+                              /*   Obx(
                                 () => Text(
                                   'Todaytracked time:- ${controller.elapsedTime.value.inHours}:${(controller.elapsedTime.value.inMinutes % 60).toString().padLeft(2, '0')}:${(controller.elapsedTime.value.inSeconds % 60).toString().padLeft(2, '0')}',
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500),
                                 ),
-                              ),
-                              20.verticalSpace,
+                              )*/
+                              ,
+                              60.verticalSpace,
                               TextField(
+                                enabled: controller.actionBtnText.value == LocaleKeys.checkIn.tr?true:false,
                                 controller: controller.siteNameController,
                                 decoration: InputDecoration(
                                     hintText: 'Enter site name',
                                     labelText: 'Enter site name',
+
+                                    disabledBorder: OutlineInputBorder(
+                                        borderRadius:
+                                        BorderRadius.circular(12)),
                                     border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(12))),
@@ -89,21 +190,25 @@ class EmployeeHomePage extends GetView<EmployeeHomeController> {
             ),
             GestureDetector(
               onTap: () async {
-                if (controller.siteNameController.text.trim().isEmpty) {
-                  Utils.showMessage('Error', 'Please enter sitename');
-                } else {
-                  final ImagePicker picker = ImagePicker();
-
-                  final XFile? photo =
-                      await picker.pickImage(source: ImageSource.camera);
-
-                  if (photo != null) {
-                    controller.imageValue.value = photo.path;
-                    StorageManager()
-                        .setPunchInTime(DateTime.timestamp().toString());
+                if (controller.actionBtnText.value == LocaleKeys.checkIn.tr) {
+                  if (controller.siteNameController.text.trim().isEmpty) {
+                    Utils.showMessage('Error', 'Please enter sitename');
                   } else {
-                    Utils.showMessage('Error', 'Something went wrong');
+                    final ImagePicker picker = ImagePicker();
+
+                    final XFile? photo =
+                        await picker.pickImage(source: ImageSource.camera);
+
+                    if (photo != null) {
+                      controller.imageValue.value = photo.path;
+                      controller.checkInUser(File(photo.path));
+                    } else {
+                      Utils.showMessage('Error', 'Something went wrong');
+                    }
                   }
+                } else {
+                  /// check out
+                  controller.checkOut();
                 }
               },
               child: Container(
@@ -112,10 +217,12 @@ class EmployeeHomePage extends GetView<EmployeeHomeController> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: AppColors.colorAppTheme),
-                child: Text(
-                  textAlign: TextAlign.center,
-                  'Punch In',
-                  style: TextStyle(color: Colors.white, fontSize: 14),
+                child: Obx(
+                  () => Text(
+                    textAlign: TextAlign.center,
+                    controller.actionBtnText.value,
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
                 ),
               ),
             ),

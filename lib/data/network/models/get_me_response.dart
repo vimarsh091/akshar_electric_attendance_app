@@ -25,10 +25,10 @@ class GetMeResponse {
 class Data {
   String? id;
   String? firstName;
-  Null? lastName;
-  Null? avatar;
+  String? lastName;
+  String? avatar;
   String? email;
-  Null? phone;
+  String? phone;
   bool? isAdmin;
 
   Data(

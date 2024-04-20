@@ -26,14 +26,15 @@ class SplashController extends GetxController
   }
 
   void redirectUser() {
-    // var loggedInUser = StorageManager().getLoggedInUser();
-    Get.offAndToNamed(AppRoutes.loginPage);
-   /* if (loggedInUser?.data?.user?.isAdmin == false) {
-      Get.offAndToNamed(AppRoutes.employeeHomePage);
-    } else if (loggedInUser?.data?.user?.isAdmin == true) {
-      Get.offAndToNamed(AppRoutes.adminHomePage);
-    } else {
+    if (StorageManager().getAuthToken() == null) {
       Get.offAndToNamed(AppRoutes.loginPage);
-    }*/
+    } else {
+      var loggedInUser = StorageManager().getLoggedInUser();
+      if (loggedInUser?.data?.user?.isAdmin == false) {
+        Get.offAndToNamed(AppRoutes.employeeHomePage);
+      } else if (loggedInUser?.data?.user?.isAdmin == true) {
+        Get.offAndToNamed(AppRoutes.adminHomePage);
+      }
+    }
   }
 }
