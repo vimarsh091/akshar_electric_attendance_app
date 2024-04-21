@@ -125,6 +125,9 @@ class Utils {
   }
 
   static String convertTo12HourFormat(String time24) {
+    if (time24.isEmpty) {
+      return 'N/A';
+    }
     // Parse the time string to a DateTime object
     DateTime time = DateFormat('HH:mm:ss').parse(time24);
 

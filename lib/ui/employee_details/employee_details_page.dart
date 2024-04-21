@@ -213,7 +213,7 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
                                                           'Check out :- ${Utils.convertTo12HourFormat(item.checkOut ?? '')}'),
                                                       4.verticalSpace,
                                                       Text(
-                                                          'Total time :- ${item.totalTime}'),
+                                                          'Total time :- ${item.totalTime??'N/A'}'),
                                                     ],
                                                   ),
                                                 ),

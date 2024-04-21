@@ -27,10 +27,24 @@ class $AssetsImagesGen {
   List<dynamic> get values => [aksharLogo, icAvatar, icLogin];
 }
 
+class $AssetsLottieGen {
+  const $AssetsLottieGen();
+
+  /// File path: assets/lottie/complete_task.json
+  String get completeTask => 'assets/lottie/complete_task.json';
+
+  /// File path: assets/lottie/information.json
+  String get information => 'assets/lottie/information.json';
+
+  /// List of all assets
+  List<String> get values => [completeTask, information];
+}
+
 class Assets {
   Assets._();
 
   static const $AssetsImagesGen images = $AssetsImagesGen();
+  static const $AssetsLottieGen lottie = $AssetsLottieGen();
 }
 
 class AssetGenImage {

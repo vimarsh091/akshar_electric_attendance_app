@@ -15,7 +15,6 @@ abstract class IApiProvider {
   Future<Either<String, dynamic>?> getMethod<T>(
     String url, {
     Map<String, dynamic>? query,
-
   });
 
   Future<Either<String, dynamic>?> putMethod<T>(String url);
@@ -50,7 +49,6 @@ class ApiProvider extends GetConnect implements IApiProvider {
   Future<Either<String, dynamic>?> getMethod<T>(
     String url, {
     Map<String, dynamic>? query,
-
   }) async {
     try {
       if (await ConnectivityManager().checkInternet()) {
@@ -58,9 +56,8 @@ class ApiProvider extends GetConnect implements IApiProvider {
 
         var result =
             await get(ApiClient.apiBaseUrl + url, query: query, headers: {
-              'accept': '*/*',
-              'Content-Type': 'application/json',
-
+          'accept': '*/*',
+          'Content-Type': 'application/json',
           if (token != null) ...{
             'Authorization': 'Bearer $token',
           }
@@ -218,8 +215,9 @@ class ApiProvider extends GetConnect implements IApiProvider {
           headers['Authorization'] = 'Bearer $token';
         }
 
-        var result =  await put(
+        var result = await put(
           ApiClient.apiBaseUrl + url,
+          null,
           headers: headers,
         );
 
