@@ -14,9 +14,9 @@ class LoginController extends GetxController {
 
   @override
   void onInit() {
-    super.onInit();/*
-    usernameController.text = 'admin@admin.com';
-    passwordController.text = 'Admin@123';*/
+    super.onInit();
+    usernameController.text = 'admin';
+    passwordController.text = 'k9HF1a!HiMf5Df';
     //   var user = StorageManager().getLoggedInUser();
   }
 

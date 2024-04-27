@@ -12,7 +12,7 @@ class SplashPage extends StatelessWidget {
     return Scaffold(
         body: Center(
             child: Padding(
-                padding: const EdgeInsets.all(22),
+                padding: const EdgeInsets.all(40),
                 child: ScaleTransition(
                   scale: Tween<double>(
                     begin: 0,

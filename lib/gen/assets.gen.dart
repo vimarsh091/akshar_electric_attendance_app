@@ -20,15 +20,25 @@ class $AssetsImagesGen {
   AssetGenImage get icAvatar =>
       const AssetGenImage('assets/images/ic_avatar.jpg');
 
+  /// File path: assets/images/ic_caution.svg
+  String get icCaution => 'assets/images/ic_caution.svg';
+
   /// File path: assets/images/ic_login.svg
   String get icLogin => 'assets/images/ic_login.svg';
 
+  /// File path: assets/images/ic_success.svg
+  String get icSuccess => 'assets/images/ic_success.svg';
+
   /// List of all assets
-  List<dynamic> get values => [aksharLogo, icAvatar, icLogin];
+  List<dynamic> get values =>
+      [aksharLogo, icAvatar, icCaution, icLogin, icSuccess];
 }
 
 class $AssetsLottieGen {
   const $AssetsLottieGen();
+
+  /// File path: assets/lottie/animation.json
+  String get animation => 'assets/lottie/animation.json';
 
   /// File path: assets/lottie/complete_task.json
   String get completeTask => 'assets/lottie/complete_task.json';
@@ -37,7 +47,7 @@ class $AssetsLottieGen {
   String get information => 'assets/lottie/information.json';
 
   /// List of all assets
-  List<String> get values => [completeTask, information];
+  List<String> get values => [animation, completeTask, information];
 }
 
 class Assets {

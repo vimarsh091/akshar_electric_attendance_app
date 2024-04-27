@@ -2,20 +2,18 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
-import 'package:material_dialogs/material_dialogs.dart';
-import 'package:material_dialogs/shared/types.dart';
-import 'package:material_dialogs/widgets/buttons/icon_button.dart';
+import 'package:test_project/app/app_color.dart';
 import 'package:test_project/data/network/models/get_me_response.dart';
 import 'package:test_project/data/network/models/site_status_response.dart'
     as site;
 import 'package:test_project/data/network/repository/repository.dart';
 import 'package:test_project/gen/assets.gen.dart';
 import 'package:test_project/generated/locales.g.dart';
+import 'package:test_project/ui/widgets/common_app_image.dart';
 import 'package:test_project/utils/utils.dart';
-
-import '../../app/app_color.dart';
 
 class EmployeeHomeController extends GetxController {
   TextEditingController siteNameController = TextEditingController();
@@ -66,7 +64,7 @@ class EmployeeHomeController extends GetxController {
     if (_lastLoginTime.year == currentDate.year &&
         _lastLoginTime.month == currentDate.month) {
       elapsedTime.value = currentDate.difference(_lastLoginTime);
-      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         elapsedTime.value = elapsedTime.value + const Duration(seconds: 1);
       });
     } else {
@@ -126,39 +124,67 @@ class EmployeeHomeController extends GetxController {
       value?.fold((left) => Utils.showMessage(LocaleKeys.error.tr, left),
           (right) async {
         _timer?.cancel();
-        showCompleteDialog(right.data?.totalTime ?? '');
+        showCompleteDialog(
+            message: 'Your time is successfully saved',
+            onclick: () {
+              SystemNavigator.pop();
+            },
+            icon: Assets.images.icSuccess);
       });
     });
   }
 
-
-
-  void showCompleteDialog(String totalTime) {
-    Dialogs.materialDialog(
-        color: Colors.white,
-        msg: totalTime,
+  void showCompleteDialog(
+      {String? icon, String? message, required VoidCallback onclick}) {
+    Get.dialog(
         barrierDismissible: false,
-        title: 'Congratulations, your time was saved',
-        lottieBuilder: Lottie.asset(
-          Assets.lottie.information,
-          fit: BoxFit.fill,
-        ),
-        customViewPosition: CustomViewPosition.BEFORE_ACTION,
-        context: Get.context!,
-        actions: [
-          IconsButton(
-            onPressed: () {
-              Get.back();
-              //Future.delayed(Duration(milliseconds: 100));
-              Get.back();
-            },
-            text: 'Done',
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            color: AppColors.colorAppTheme,
-            textStyle: const TextStyle(color: Colors.white),
+        Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(20)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                10.verticalSpace,
+                CommonAppImage(imagePath: icon ?? '', height: 88, width: 88),
+                20.verticalSpace,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Center(
+                    child: Text(
+                      message ?? '',
+                      style: const TextStyle(
+                          fontSize: 18,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ),
+                ),
+                26.verticalSpace,
+                GestureDetector(
+                  onTap: () {
+                    onclick.call();
+                  },
+                  child: Container(
+                    width: Get.width,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: AppColors.colorAppTheme),
+                    child: const Text(
+                      textAlign: TextAlign.center,
+                      'Okay',
+                      style: TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ]);
+        ));
   }
 
   @override

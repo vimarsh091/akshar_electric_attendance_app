@@ -507,9 +507,9 @@
     },
     {
       "name": "lottie",
-      "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/lottie-2.1.0",
+      "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/lottie-3.1.0",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "3.2"
     },
     {
       "name": "matcher",
@@ -522,12 +522,6 @@
       "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/material_color_utilities-0.8.0",
       "packageUri": "lib/",
       "languageVersion": "2.17"
-    },
-    {
-      "name": "material_dialogs",
-      "rootUri": "file:///home/vimarsh/.pub-cache/hosted/pub.dev/material_dialogs-1.1.4",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
     },
     {
       "name": "meta",
@@ -908,7 +902,7 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-04-21T10:47:13.944310Z",
+  "generated": "2024-04-22T17:07:56.058521Z",
   "generator": "pub",
   "generatorVersion": "3.3.0"
 }
