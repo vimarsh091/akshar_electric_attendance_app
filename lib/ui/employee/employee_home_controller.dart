@@ -20,13 +20,6 @@ class EmployeeHomeController extends GetxController {
   RxBool isLoading = false.obs;
   RxString imageValue = Assets.images.aksharLogo.path.obs;
   RxString actionBtnText = LocaleKeys.checkIn.tr.obs;
-  DateTime _lastLoginTime = DateTime(
-      DateTime.now().year - 1,
-      DateTime.now().month,
-      DateTime.now().day,
-      DateTime.now().hour,
-      DateTime.now().minute,
-      DateTime.now().second);
   Timer? _timer;
   Rx<Duration> elapsedTime = Duration.zero.obs;
   Rxn<GetMeResponse> getMeData = Rxn<GetMeResponse>();
@@ -42,34 +35,12 @@ class EmployeeHomeController extends GetxController {
     });
   }
 
-  void _calculateElapsedTime() {
-    DateTime currentTime = DateTime.now();
-    elapsedTime.value = currentTime.difference(_lastLoginTime);
-  }
-
-  Future<void> _initPreferences(DateTime time) async {
-    _lastLoginTime = time ??
-        DateTime(
-            DateTime.now().year - 1,
-            DateTime.now().month,
-            DateTime.now().day,
-            DateTime.now().hour,
-            DateTime.now().minute,
-            DateTime.now().second);
-    _calculateElapsedTime();
-  }
-
-  void _startTimer() {
-    DateTime currentDate = DateTime.now();
-    if (_lastLoginTime.year == currentDate.year &&
-        _lastLoginTime.month == currentDate.month) {
-      elapsedTime.value = currentDate.difference(_lastLoginTime);
-      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        elapsedTime.value = elapsedTime.value + const Duration(seconds: 1);
-      });
-    } else {
-      debugPrint('else part');
-    }
+  void _startTimer(DateTime loginTime) {
+    var currentDate = DateTime.now().toUtc();
+    elapsedTime.value = currentDate.difference(loginTime);
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      elapsedTime.value = elapsedTime.value + const Duration(seconds: 1);
+    });
   }
 
   void getMe() async {
@@ -95,8 +66,9 @@ class EmployeeHomeController extends GetxController {
             ? LocaleKeys.checkOut.tr
             : LocaleKeys.checkIn.tr;
         if (right.data?.action == 'check-out') {
-          _initPreferences(DateTime.parse(right.data?.status?.checkIn ?? ''));
-          _startTimer();
+          if (right.data?.status?.checkIn != null) {
+            _startTimer(DateTime.parse(right.data!.status!.checkIn!));
+          }
         }
       });
     });
@@ -111,8 +83,9 @@ class EmployeeHomeController extends GetxController {
       value?.fold((left) => Utils.showMessage(LocaleKeys.error.tr, left),
           (right) async {
         actionBtnText.value = LocaleKeys.checkOut.tr;
-        _initPreferences(DateTime.parse(right.data?.checkIn ?? ''));
-        _startTimer();
+        if (right.data?.checkIn != null) {
+          _startTimer(DateTime.parse(right.data!.checkIn!));
+        }
       });
     });
   }
@@ -124,6 +97,7 @@ class EmployeeHomeController extends GetxController {
       value?.fold((left) => Utils.showMessage(LocaleKeys.error.tr, left),
           (right) async {
         _timer?.cancel();
+        siteNameController.clear();
         showCompleteDialog(
             message: 'Your time is successfully saved',
             onclick: () {

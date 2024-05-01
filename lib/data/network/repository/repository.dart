@@ -134,9 +134,9 @@ class Repository extends ApiProvider {
     String url = ApiClient.userDetail;
 
     url +=
-        '/$id/sites/$siteId?siteName=$siteName&startTime=$punchInTime&endTime=$punchOutTime';
+        '/$id/sites/$siteId?siteName=$siteName&checkIn=$punchInTime&checkOut=$punchOutTime';
 
-    var response = await getMethod(url);
+    var response = await putMethod(url);
     return response?.fold((l) => Left(l), (r) {
       var result = CommonResponse.fromJson(r);
       return Right(result);

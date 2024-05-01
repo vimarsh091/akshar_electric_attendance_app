@@ -229,7 +229,7 @@ class EmployeeHomePage extends GetView<EmployeeHomeController> {
                             final ImagePicker picker = ImagePicker();
 
                             final XFile? photo = await picker.pickImage(
-                                source: ImageSource.camera);
+                                source: ImageSource.camera,imageQuality: 50);
 
                             if (photo != null) {
                               controller.imageValue.value = photo.path;

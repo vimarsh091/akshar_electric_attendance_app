@@ -213,7 +213,7 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
                                                           'Check out :- ${Utils.convertTo12HourFormat(item.checkOut ?? '')}'),
                                                       4.verticalSpace,
                                                       Text(
-                                                          'Total time :- ${item.totalTime??'N/A'}'),
+                                                          'Total time :- ${item.totalTime ?? 'N/A'}'),
                                                     ],
                                                   ),
                                                 ),
@@ -384,11 +384,12 @@ class EmployeeDetailsPage extends GetView<EmployeeDetailsController> {
                       .isEmpty) {
                     Utils.showMessage('Error', 'Please enter site name');
                   } else {
+
                     controller.updateSiteData(
                         siteName: controller.siteNameController.text.trim(),
                         siteId: item.id,
-                        punchOutTime: DateFormat('HH:mm:ss').format(punchIn),
-                        punchInTime: DateFormat('HH:mm:ss').format(punchOut));
+                        punchInTime: DateFormat('HH:mm:ss').format(punchIn),
+                        punchOutTime: DateFormat('HH:mm:ss').format(punchOut));
                   }
                 },
                 child: Container(
